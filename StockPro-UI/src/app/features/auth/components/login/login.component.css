@@ -1,0 +1,4 @@
+/* Minimal component styling - layout is handled by global classes */
+:host {
+  display: block;
+}

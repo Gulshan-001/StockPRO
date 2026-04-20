@@ -1,0 +1,4 @@
+/* Minimal component styling */
+:host {
+  display: block;
+}

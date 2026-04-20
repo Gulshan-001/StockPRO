@@ -1,0 +1,167 @@
+/* ──────────────────────────────────────────────────────────────
+   StockPro – Simplified Design System
+   Theme: Expansive Glassy Minimalist
+────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@700;800&display=swap');
+
+:root {
+  --color-bg:      #0a0a0a;
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-border:  rgba(255, 255, 255, 0.1);
+  --color-text:    #ffffff;
+  --color-muted:   rgba(255, 255, 255, 0.4);
+  --radius:        12px;
+  --font:          'Inter', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font);
+  font-size: 15px;
+  overflow: hidden; /* For full-screen layouts */
+}
+
+/* ── Layout Helpers (Seamless Blend) ── */
+.app-container {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  height: 100vh;
+  width: 100vw;
+  background-size: cover;
+  background-position: right center;
+  position: relative;
+}
+
+/* Auth Environment Background */
+.bg-auth {
+  background-image: url('assets/images/hero_final.png');
+}
+
+/* Dashboard Environment Background (Operational Vector Orbits) */
+.bg-dashboard {
+  background-color: #000;
+  background-image: 
+    radial-gradient(circle at 90% 50%, transparent 0%, transparent 200px, rgba(255,255,255,0.35) 201px, transparent 205px),
+    radial-gradient(circle at 90% 50%, transparent 0%, transparent 450px, rgba(255,255,255,0.25) 451px, transparent 455px),
+    radial-gradient(circle at 90% 50%, transparent 0%, transparent 750px, rgba(255,255,255,0.15) 751px, transparent 755px),
+    radial-gradient(circle at 90% 50%, transparent 0%, transparent 1100px, rgba(255,255,255,0.08) 1101px, transparent 1105px);
+}
+
+/* Subtle grain overlay to prevent pixelation and add depth */
+.app-container::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.content-panel {
+  padding: 8% 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  background: linear-gradient(to right, #000 0%, #000 40%, transparent 100%);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Optimized for high-density Auth forms */
+.auth-panel {
+  padding: 120px 10% 40px 10% !important; /* Clears logo and allows space at bottom */
+  justify-content: flex-start !important;
+}
+
+.auth-panel .form-group { margin-bottom: 16px; } /* Compressed margins */
+.auth-panel .subtitle { margin-bottom: 24px; }   /* Compressed spacing */
+.auth-panel .label { margin-bottom: 4px; }       /* Compressed labels */
+
+.content-panel::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+}
+
+.visual-panel {
+  /* Panel is now just a placeholder for the grid since background is on container */
+  pointer-events: none;
+}
+
+/* ── Forms ── */
+.form-group { margin-bottom: 24px; }
+
+.label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-muted);
+  margin-bottom: 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input:focus { border-color: rgba(255,255,255,0.3); }
+
+select.input option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+/* ── Buttons ── */
+.btn {
+  padding: 14px 32px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-family: var(--font);
+}
+.btn-primary { background: #fff; color: #000; }
+.btn-primary:hover { background: rgba(255,255,255,0.9); transform: translateY(-2px); }
+
+.btn-ghost { background: transparent; color: var(--color-muted); border: 1px solid var(--color-border); }
+.btn-ghost:hover { color: #fff; border-color: #fff; }
+
+/* ── Utility ── */
+.title { font-size: 32px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+.subtitle { color: var(--color-muted); margin-bottom: 40px; line-height: 1.6; }
+.text-error { color: #ff5f5f; font-size: 12px; margin-top: 6px; }
+
+/* ── Global Branding (Stationary) ── */
+.global-logo {
+  position: fixed;
+  top: 40px;
+  left: 10%;
+  z-index: 1000;
+  pointer-events: none;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 23px; /* 12% increase from 20px */
+  letter-spacing: -0.05em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate { animation: fadeIn 0.6s ease-out both; }
