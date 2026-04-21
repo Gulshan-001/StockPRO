@@ -1,11 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule, CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
+import { RouterModule, ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
+  standalone: true,
   selector: 'app-product-detail',
+  imports: [
+    CommonModule,
+    RouterModule,
+    CurrencyPipe,
+    DatePipe,
+    PercentPipe
+  ],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })

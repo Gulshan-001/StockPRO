@@ -16,7 +16,7 @@ const routes: Routes = [
   {
     path: 'products',
     canActivate: [AuthGuard],
-    loadChildren: () => import('./features/products/products.module').then(m => m.ProductModule)
+    loadChildren: () => import('./features/products/products.routes').then(r => r.PRODUCT_ROUTES)
   },
   { path: 'unauthorized', redirectTo: 'auth/login' },
   { path: '**', redirectTo: 'auth/login' }

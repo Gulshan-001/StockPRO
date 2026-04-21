@@ -1,11 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
 import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
+  standalone: true,
   selector: 'app-product-list',
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    CurrencyPipe
+  ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
