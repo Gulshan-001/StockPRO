@@ -1,0 +1,116 @@
+<div class="app-container bg-inventory animate">
+  <div class="content-panel">
+    <div class="detail-header">
+      <button class="back-link" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i> Backend to Catalog
+      </button>
+      <div class="header-actions" *ngIf="canManage">
+        <button class="btn btn-ghost" (click)="editProduct()">
+          <i class="fas fa-pencil"></i> Modify Details
+        </button>
+      </div>
+    </div>
+
+    <div class="loading-state" *ngIf="loading">
+      <div class="zen-spinner"></div>
+    </div>
+
+    <div class="specs-grid" *ngIf="product && !loading">
+      <!-- Master Identity Card -->
+      <div class="glass-card identity-card">
+        <div class="identity-content">
+          <div class="visual-anchor">
+            <div class="large-placeholder" *ngIf="!product.imageUrl">
+              {{ product.name.charAt(0) }}
+            </div>
+            <img *ngIf="product.imageUrl" [src]="product.imageUrl" class="master-img">
+          </div>
+          <div class="identity-text">
+            <div class="status-indicator" [class.active]="product.isActive">
+              <span class="status-pulse"></span>
+              {{ product.isActive ? 'Active Inventory Registry' : 'Deactivated Asset' }}
+            </div>
+            <h1 class="master-title">{{ product.name }}</h1>
+            <div class="identifiers">
+              <div class="id-item"><span class="label">SKU:</span> <code class="sku-tag">{{ product.sku }}</code></div>
+              <div class="id-item"><span class="label">Barcode:</span> <span class="val">{{ product.barcode || 'N/A' }}</span></div>
+            </div>
+            <p class="description">{{ product.description || 'No specialized description provided for this catalog entry.' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Metrics Card -->
+      <div class="glass-card metrics-card">
+        <h3 class="card-label">Market Value Metrics</h3>
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="m-label">Net Selling Price</span>
+            <span class="m-val primary">{{ product.sellingPrice | currency }}</span>
+          </div>
+          <div class="metric-item">
+            <span class="m-label">Acquisition Cost</span>
+            <span class="m-val">{{ product.costPrice | currency }}</span>
+          </div>
+          <div class="metric-item highlight">
+            <span class="m-label">Calculated Margin</span>
+            <span class="m-val accent">{{ ((product.sellingPrice - product.costPrice) / product.sellingPrice) | percent }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory Logic Card -->
+      <div class="glass-card info-card">
+        <h3 class="card-label">Logistics & Capacity</h3>
+        <div class="info-list">
+          <div class="info-item">
+            <span class="i-label">Safe Threshold</span>
+            <span class="i-val">{{ product.reorderLevel }} {{ product.unitOfMeasure }}</span>
+          </div>
+          <div class="info-item">
+            <span class="i-label">Max Warehouse Capacity</span>
+            <span class="i-val">{{ product.maxStockLevel }} {{ product.unitOfMeasure }}</span>
+          </div>
+          <div class="info-item">
+            <span class="i-label">Supply Lead Time</span>
+            <span class="i-val">{{ product.leadTimeDays || 0 }} Standard Days</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classification Card -->
+      <div class="glass-card info-card">
+        <h3 class="card-label">Strategic Classification</h3>
+        <div class="info-list">
+          <div class="info-item">
+            <span class="i-label">Primary Category</span>
+            <span class="i-val">{{ product.category || 'General Catalog' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="i-label">Manufacturing Brand</span>
+            <span class="i-val">{{ product.brand || 'Authentic Origin' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="i-label">Standard Unit</span>
+            <span class="i-val uppercase">{{ product.unitOfMeasure || 'pcs' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Audit Card -->
+      <div class="glass-card audit-card">
+        <h3 class="card-label">System Metadata</h3>
+        <div class="audit-list">
+          <div class="audit-item">
+            <span class="a-label">Registry Creation</span>
+            <span class="a-val">{{ product.createdAt | date:'longDate' }}</span>
+          </div>
+          <div class="audit-item">
+            <span class="a-label">Technical Product ID</span>
+            <span class="a-val monospace">{{ product.productId }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

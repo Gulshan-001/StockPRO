@@ -51,6 +51,16 @@ body {
     radial-gradient(circle at 90% 50%, transparent 0%, transparent 1100px, rgba(255,255,255,0.08) 1101px, transparent 1105px);
 }
 
+/* Inventory Environment Background (Technical Precision Mesh) */
+.bg-inventory {
+  background-color: #050505;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(30, 58, 138, 0.15) 0%, transparent 60%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+}
+
 /* Subtle grain overlay to prevent pixelation and add depth */
 .app-container::before {
   content: "";
@@ -63,10 +73,10 @@ body {
 }
 
 .content-panel {
-  padding: 8% 10%;
+  padding: 120px 10% 60px 10%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   overflow-y: auto;
   background: linear-gradient(to right, #000 0%, #000 40%, transparent 100%);
   scrollbar-width: none;
@@ -145,19 +155,37 @@ select.input option {
 .subtitle { color: var(--color-muted); margin-bottom: 40px; line-height: 1.6; }
 .text-error { color: #ff5f5f; font-size: 12px; margin-top: 6px; }
 
-/* ── Global Branding (Stationary) ── */
+/* ── Global Branding & Navigation Protection ── */
 .global-logo {
   position: fixed;
   top: 40px;
   left: 10%;
-  z-index: 1000;
+  z-index: 1001; /* Above shroud and content */
   pointer-events: none;
   font-family: 'Outfit', sans-serif;
   font-weight: 800;
-  font-size: 23px; /* 12% increase from 20px */
+  font-size: 23px;
   letter-spacing: -0.05em;
   color: #fff;
   text-transform: uppercase;
+}
+
+/* 
+   The Zen Shroud: 
+   Provides a blurred gradient backdrop to dissolve scrolling content 
+   before it reaches the brand name area.
+*/
+.header-shroud {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  z-index: 1000;
+  background: linear-gradient(to bottom, #000 70%, transparent 100%);
+  backdrop-filter: blur(8px);
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  pointer-events: none;
 }
 
 @keyframes fadeIn {

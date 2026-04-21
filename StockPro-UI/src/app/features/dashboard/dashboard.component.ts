@@ -23,11 +23,10 @@ import { RouterModule } from '@angular/router';
           <p style="color: var(--color-muted); font-size: 13px; margin-top: 8px;">Update your details and security preferences.</p>
         </div>
         
-        <div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: 40px; border-radius: 20px; opacity: 0.5; position: relative;">
+        <div (click)="goProducts()" style="background: var(--color-surface); border: 1px solid var(--color-border); padding: 40px; border-radius: 20px; cursor: pointer; transition: all 0.3s; height: 100%;">
           <span class="label">System</span>
-          <h3 style="font-size: 20px; margin-top: 10px;">Inventory (UC2)</h3>
-          <p style="color: var(--color-muted); font-size: 13px; margin-top: 8px;">Next module: Product and stock management.</p>
-          <span style="position: absolute; top: 20px; right: 20px; font-size: 10px; font-weight: 800; padding: 2px 8px; border: 1px solid var(--color-muted); border-radius: 4px;">LOCKED</span>
+          <h3 style="font-size: 20px; margin-top: 10px;">Product Catalog</h3>
+          <p style="color: var(--color-muted); font-size: 13px; margin-top: 8px;">Access master data, SKU lookup, and pricing rules.</p>
         </div>
       </div>
 
@@ -55,6 +54,7 @@ export class DashboardComponent implements OnInit {
     this.userRole = user?.role ?? '';
   }
 
-  goProfile(): void { this.router.navigate(['/auth/profile']); }
-  logout(): void    { this.authService.logout(); }
+  goProfile() : void { this.router.navigate(['/auth/profile']); }
+  goProducts(): void { this.router.navigate(['/products']); }
+  logout()     : void { this.authService.logout(); }
 }

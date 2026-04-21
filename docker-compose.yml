@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: stockpro-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: stockpro_default
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - stockpro-network
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: stockpro-admin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@stockpro.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+    restart: always
+
+networks:
+  stockpro-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

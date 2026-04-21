@@ -13,6 +13,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
+  {
+    path: 'products',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/products/products.module').then(m => m.ProductModule)
+  },
   { path: 'unauthorized', redirectTo: 'auth/login' },
   { path: '**', redirectTo: 'auth/login' }
 ];

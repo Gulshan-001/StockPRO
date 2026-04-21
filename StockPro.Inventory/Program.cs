@@ -1,35 +1,18 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using StockPro.Auth.Data;
-using StockPro.Auth.Models;
-using StockPro.Auth.Services;
+using StockPro.Inventory.Data;
+using StockPro.Inventory.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ─── Database: PostgreSQL ───────────────────────────────────────────
-builder.Services.AddDbContext<AuthDbContext>(options =>
+builder.Services.AddDbContext<InventoryDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// ─── Identity ───────────────────────────────────────────────────────
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 8;
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
-    options.User.RequireUniqueEmail = true;
-})
-.AddEntityFrameworkStores<AuthDbContext>()
-.AddDefaultTokenProviders();
-
-// ─── JWT ────────────────────────────────────────────────────────────
+// ─── JWT Authentication ───────────────────────────────────────────
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
 
@@ -55,10 +38,10 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// ─── Services ────────────────────────────────────────────────────────
-builder.Services.AddScoped<ITokenService, TokenService>();
+// ─── Services DI ────────────────────────────────────────────────────
+builder.Services.AddScoped<IProductService, ProductService>();
 
-// ─── CORS ────────────────────────────────────────────────────────────
+// ─── CORS ───────────────────────────────────────────────────────────
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularFrontend", policy =>
@@ -70,16 +53,16 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ─── Controllers + Swagger ───────────────────────────────────────────
+// ─── Controllers + Swagger ──────────────────────────────────────────
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "StockPro Auth API",
+        Title = "StockPro Inventory API",
         Version = "v1",
-        Description = "Authentication & Authorization service for the StockPro Inventory Management System"
+        Description = "Product Management System for StockPro"
     });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -121,8 +104,14 @@ app.MapControllers();
 // ─── Auto-migrate on startup ─────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
-    db.Database.Migrate();
+    var db = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
+    // Wait for DB to be ready, then migrate. 
+    // In production, migrations should usually be external, but for dev this is fine.
+    try {
+        db.Database.Migrate();
+    } catch (Exception ex) {
+        Console.WriteLine($"Migration failed: {ex.Message}");
+    }
 }
 
 app.Run();
