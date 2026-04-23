@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("StockPro.Auth")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fa5ad77837a35e947c62b4504231b7e8a5bb852b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8bf8cd260ee8c44dc085e8b215a6e3f17770edb1")]
 [assembly: System.Reflection.AssemblyProductAttribute("StockPro.Auth")]
 [assembly: System.Reflection.AssemblyTitleAttribute("StockPro.Auth")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

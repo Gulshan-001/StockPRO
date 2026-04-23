@@ -1,101 +1,118 @@
-<div class="app-container bg-inventory animate">
-  <div class="content-panel">
-    <div class="product-header">
-      <div class="header-text">
-        <h1 class="page-title">Product Catalog</h1>
-        <p class="subtitle">Authoritative master data for stock and pricing rules.</p>
+<div class="app-container bg-catalog animate">
+  <div class="content-panel full-width">
+    
+    <div class="navigation-trail">
+      <a routerLink="/dashboard" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <div class="ledger-header-section">
+      <div class="title-group">
+        <h1 class="ledger-title">Master Product Registry</h1>
+        <p class="ledger-subtitle">Authoritative data specification for the StockPro ecosystem.</p>
       </div>
       <div class="header-actions" *ngIf="canManage">
-        <button class="btn btn-primary btn-icon" routerLink="new">
-          <i class="fas fa-plus"></i> New Product
-        </button>
+        <button class="btn btn-primary" routerLink="new">+ Create Specification</button>
       </div>
     </div>
 
-    <div class="search-bar-container">
-      <div class="search-input-wrapper">
-        <i class="fas fa-search search-icon"></i>
-        <input 
-          type="text" 
-          class="glamor-input"
-          placeholder="Lookup by name, SKU, or barcode..." 
-          [(ngModel)]="searchQuery"
-          (input)="onSearch(searchQuery)"
-        >
-      </div>
+    <div class="search-matrix">
+      <input 
+        type="text" 
+        class="matrix-search-input"
+        placeholder="Filter by SKU, Barcode, or Product Identity..." 
+        [(ngModel)]="searchQuery"
+        (input)="onSearch(searchQuery)"
+      >
+      <div class="search-glow"></div>
     </div>
 
-    <div class="list-container">
-      <div class="loading-state" *ngIf="loading">
-        <div class="shimmer-row" *ngFor="let i of [1,2,3,4,5]"></div>
+    <div class="ledger-container">
+      <!-- Ledger Header -->
+      <div class="ledger-head">
+        <div class="col-main">Product Identity</div>
+        <div class="col-tech">Technical Specs</div>
+        <div class="col-price">Financials</div>
+        <div class="col-status">Registry Status</div>
+        <div class="col-actions" *ngIf="canManage"></div>
       </div>
 
-      <div class="glass-table-wrapper" *ngIf="!loading">
-        <table class="zen-table">
-          <thead>
-            <tr>
-              <th>Product Details</th>
-              <th>SKU Code</th>
-              <th>Category</th>
-              <th>Market Value</th>
-              <th class="text-center">Status</th>
-              <th *ngIf="canManage" class="text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let product of products" [routerLink]="['/products', product.productId]" class="zen-row">
-              <td class="product-cell">
-                <div class="product-minimal-info">
-                  <div class="img-badge" [class.no-img]="!product.imageUrl">
-                    <span *ngIf="!product.imageUrl">{{ product.name.charAt(0) }}</span>
-                    <img *ngIf="product.imageUrl" [src]="product.imageUrl">
-                  </div>
-                  <div class="text-stack">
-                    <span class="p-name">{{ product.name }}</span>
-                    <span class="p-brand">{{ product.brand || 'No Brand' }}</span>
-                  </div>
-                </div>
-              </td>
-              <td><code class="sku-tag">{{ product.sku }}</code></td>
-              <td><span class="category-tag">{{ product.category || 'General' }}</span></td>
-              <td>
-                <div class="pricing-stack">
-                  <span class="price-main">{{ product.sellingPrice | currency }}</span>
-                  <span class="price-sub">Cost: {{ product.costPrice | currency }}</span>
-                </div>
-              </td>
-              <td class="text-center">
-                <div 
-                  class="status-dot" 
-                  [class.active]="product.isActive"
-                  (click)="$event.stopPropagation(); toggleStatus(product)"
-                  [title]="canManage ? 'Toggle Visibility' : ''"
-                >
-                  <span class="dot"></span>
-                  {{ product.isActive ? 'Active' : 'Inactive' }}
-                </div>
-              </td>
-              <td *ngIf="canManage" class="text-right" (click)="$event.stopPropagation()">
-                <div class="zen-actions">
-                  <button class="action-btn" [routerLink]="[product.productId, 'edit']" title="Modify Specs">
-                    <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="action-btn delete" (click)="deleteProduct(product.productId)" title="Deactivate">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Loading State -->
+      <div class="ledger-loading" *ngIf="loading">
+        <div class="shimmer-ledger" *ngFor="let i of [1,2,3,4,5]"></div>
+      </div>
+
+      <!-- Ledger Rows -->
+      <div class="ledger-body" *ngIf="!loading">
+        <div *ngFor="let product of products" class="ledger-row" [routerLink]="['/products', product.productId]">
+          
+          <div class="col-main">
+            <div class="identity-lockup">
+              <div class="p-avatar" [class.no-img]="!product.imageUrl">
+                <span *ngIf="!product.imageUrl">{{ product.name.charAt(0) }}</span>
+                <img *ngIf="product.imageUrl" [src]="product.imageUrl">
+              </div>
+              <div class="p-info">
+                <h3 class="p-name">{{ product.name }}</h3>
+                <span class="p-brand">{{ product.brand || 'Authentic Origin' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-tech">
+            <div class="tech-stack">
+              <div class="tech-item">
+                <span class="t-label">SKU</span>
+                <code class="t-val">{{ product.sku }}</code>
+              </div>
+              <div class="tech-item">
+                <span class="t-label">Category</span>
+                <span class="t-val">{{ product.category || 'General' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-price">
+            <div class="price-stack">
+              <div class="price-item">
+                <span class="pr-label">Market Price</span>
+                <span class="pr-val">{{ product.sellingPrice | currency }}</span>
+              </div>
+              <div class="price-item">
+                <span class="pr-label">Cost Basis</span>
+                <span class="pr-val secondary">{{ product.costPrice | currency }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-status">
+            <div class="status-badge" [class.active]="product.isActive" (click)="$event.stopPropagation(); toggleStatus(product)">
+              <span class="status-orb"></span>
+              {{ product.isActive ? 'Active Registry' : 'Archived' }}
+            </div>
+          </div>
+
+          <div class="col-actions" *ngIf="canManage" (click)="$event.stopPropagation()">
+            <div class="row-actions">
+              <button class="icon-btn" [routerLink]="[product.productId, 'edit']" title="Edit Spec">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="icon-btn delete" (click)="deleteProduct(product.productId)" title="Dearchive">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+
+        </div>
 
         <!-- Empty State -->
-        <div class="empty-zen" *ngIf="products.length === 0">
-          <div class="empty-icon">📦</div>
-          <h3>Quiet in the Warehouse</h3>
-          <p>No products found matching your active filter.</p>
+        <div class="ledger-empty" *ngIf="products.length === 0">
+          <div class="empty-icon-ghost"></div>
+          <h3>Registry Clear</h3>
+          <p>No specifications match your current active filter.</p>
         </div>
       </div>
     </div>
+
   </div>
+  <div class="visual-panel"></div>
 </div>

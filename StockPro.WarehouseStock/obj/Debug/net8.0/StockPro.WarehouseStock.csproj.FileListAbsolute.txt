@@ -1,0 +1,17 @@
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Npgsql.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\StockPRO\StockPro.Inventory\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

@@ -1,14 +1,12 @@
-<div class="app-container bg-inventory animate">
+<div class="app-container bg-catalog animate">
   <div class="content-panel">
-    <div class="detail-header">
-      <button class="back-link" (click)="goBack()">
-        <i class="fas fa-arrow-left"></i> Backend to Catalog
+    <div class="navigation-trail">
+      <a routerLink="/products" class="back-link">← Back to Catalog</a>
+    </div>
+    <div class="header-actions" *ngIf="canManage">
+      <button class="btn btn-ghost" (click)="editProduct()">
+        <i class="fas fa-pencil"></i> Modify Details
       </button>
-      <div class="header-actions" *ngIf="canManage">
-        <button class="btn btn-ghost" (click)="editProduct()">
-          <i class="fas fa-pencil"></i> Modify Details
-        </button>
-      </div>
     </div>
 
     <div class="loading-state" *ngIf="loading">

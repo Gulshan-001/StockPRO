@@ -1,189 +1,182 @@
-.form-header {
-  margin-bottom: 3rem;
+/* ──────────────────────────────────────────────────────────────
+   Product Form: Technical Spec-Sheet Theme
+────────────────────────────────────────────────────────────── */
+
+.content-panel.full-width {
+    padding-top: 100px;
 }
 
-.back-link {
-  background: transparent;
-  border: none;
-  color: var(--color-muted);
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  transition: color 0.2s;
+/* ── Ledger Style Header ── */
+.ledger-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
 }
 
-.back-link:hover { color: #fff; }
-
-.page-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: #fff;
-  margin-bottom: 0.25rem;
+.ledger-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 48px; /* Increased size */
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: #ffffff; /* Pure white */
+    margin-bottom: 8px;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.2); /* Added glow */
 }
 
-.subtitle {
-  color: var(--color-muted);
-  font-size: 1rem;
+.ledger-subtitle {
+    color: rgba(255, 255, 255, 0.6); /* Brighter muted text */
+    font-size: 18px;
 }
 
-/* ── Zen Form Architecture ── */
-.form-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid var(--color-border);
-  border-radius: 24px;
-  padding: 3rem;
-  backdrop-filter: blur(20px);
+/* ── Spec Grid ── */
+.spec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 3rem;
 }
 
-.grid-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+.spec-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    padding: 32px;
+    backdrop-filter: blur(10px);
 }
 
-.form-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.spec-card-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
 }
 
-.section-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #6366f1;
-  margin-bottom: 1rem;
+.spec-section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 4px;
+    color: #fff;
 }
 
-.field-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+/* ── Form Fields ── */
+.spec-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.field-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .field-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
-/* ── Inputs ── */
-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
+.spec-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-muted);
 }
 
-input, textarea, select {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 0.8rem 1rem;
-  color: #fff;
-  font-family: var(--font);
-  font-size: 0.95rem;
-  transition: all 0.2s;
-  outline: none;
+.spec-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.2s;
 }
 
-input:focus, textarea:focus, select:focus {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.3);
+.spec-input:focus {
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.08);
 }
 
-textarea { resize: vertical; }
-
-.v-error {
-  font-size: 0.75rem;
-  color: #ef4444;
-  margin-top: 0.25rem;
+.spec-input.mono {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
 }
 
-/* ── Toggle Switch ── */
+.spec-input.highlight {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+select.spec-input option {
+    background: #1a1a1a;
+    color: #fff;
+}
+
+/* ── Toggle Logic ── */
+.checkbox-field {
+    margin-top: 1rem;
+}
+
+.spec-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.spec-toggle input {
+    display: none;
+}
+
+.toggle-track {
+    width: 40px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    position: relative;
+    transition: background 0.3s;
+}
+
+.toggle-track::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+input:checked + .toggle-track {
+    background: #10b981;
+}
+
+input:checked + .toggle-track::after {
+    transform: translateX(20px);
+}
+
 .toggle-label {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  cursor: pointer;
-}
-
-.toggle-label input { display: none; }
-
-.toggle-slider {
-  width: 44px;
-  height: 24px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  position: relative;
-  transition: 0.3s;
-}
-
-.toggle-slider::before {
-  content: "";
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  background: #fff;
-  border-radius: 50%;
-  top: 3px;
-  left: 3px;
-  transition: 0.3s;
-}
-
-input:checked + .toggle-slider {
-  background: #10b981;
-}
-
-input:checked + .toggle-slider::before {
-  transform: translateX(20px);
-}
-
-.toggle-text {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    color: var(--color-muted);
 }
 
 /* ── Footer ── */
-.form-footer {
-  margin-top: 4rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+.spec-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
 }
 
-.form-alert {
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-weight: 500;
+.v-error {
+    font-size: 11px;
+    color: #ef4444;
 }
-
-.form-alert.error {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-}
-
-.spinner-mini {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: rotate 0.8s linear infinite;
-  display: inline-block;
-  margin-right: 0.5rem;
-}
-
-@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }

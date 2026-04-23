@@ -1,121 +1,125 @@
-<div class="app-container bg-inventory animate">
-  <div class="content-panel">
-    <div class="form-header">
-      <button class="back-link" (click)="onCancel()">
-        <i class="fas fa-arrow-left"></i> Return to Catalog
-      </button>
-      <h1 class="page-title">{{ isEditMode ? 'Modify Product' : 'Register Product' }}</h1>
-      <p class="subtitle">Enter technical specifications and market pricing attributes.</p>
+<div class="app-container bg-catalog animate">
+  <div class="content-panel full-width">
+    
+    <div class="navigation-trail">
+      <a (click)="onCancel()" class="back-link">← Back to Registry</a>
     </div>
 
-    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="zen-form">
+    <div class="ledger-header-section">
+      <div class="title-group">
+        <h1 class="ledger-title">{{ isEditMode ? 'Modify Specification' : 'Register New Asset' }}</h1>
+        <p class="ledger-subtitle">Define authoritative technical and market attributes for the master catalog.</p>
+      </div>
+    </div>
+
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="ledger-spec-form">
+      
       <div class="form-alert error" *ngIf="errorMessage">
         <i class="fas fa-circle-exclamation"></i> {{ errorMessage }}
       </div>
 
-      <div class="form-card">
-        <div class="grid-layout">
-          <!-- Identity Section -->
-          <div class="form-section">
-            <h3 class="section-label">Identity & Branding</h3>
-            
-            <div class="field-group full">
-              <label>Full Product Name*</label>
-              <input type="text" formControlName="name" placeholder="e.g. Precision Lathe X-100">
-              <span class="v-error" *ngIf="productForm.get('name')?.touched && productForm.get('name')?.errors?.['required']">Required</span>
+      <div class="spec-grid">
+        <!-- Identity Section -->
+        <div class="spec-card">
+          <div class="spec-card-header">
+            <span class="label">Primary Identity</span>
+            <h2 class="spec-section-title">Brand & Model Details</h2>
+          </div>
+          
+          <div class="spec-fields">
+            <div class="field-wrap full">
+              <label class="spec-label">Official Product Name*</label>
+              <input type="text" class="spec-input" formControlName="name" placeholder="e.g. Precision Lathe X-100">
+              <span class="v-error" *ngIf="productForm.get('name')?.touched && productForm.get('name')?.errors?.['required']">Registry requirement: Name must be specified</span>
             </div>
 
             <div class="field-row">
-              <div class="field-group">
-                <label>SKU Identifier*</label>
-                <input type="text" formControlName="sku" placeholder="SKU-XXX-000">
+              <div class="field-wrap">
+                <label class="spec-label">SKU Identifier*</label>
+                <input type="text" class="spec-input mono" formControlName="sku" placeholder="SKU-XXX-000">
               </div>
-              <div class="field-group">
-                <label>Barcode / GTIN</label>
-                <input type="text" formControlName="barcode" placeholder="UPC-A / EAN-13">
+              <div class="field-wrap">
+                <label class="spec-label">Barcode / GTIN</label>
+                <input type="text" class="spec-input mono" formControlName="barcode" placeholder="UPC-A / EAN-13">
               </div>
             </div>
 
             <div class="field-row">
-              <div class="field-group">
-                <label>Category</label>
-                <input type="text" formControlName="category" placeholder="Electronics, Industrial...">
+              <div class="field-wrap">
+                <label class="spec-label">Category</label>
+                <input type="text" class="spec-input" formControlName="category" placeholder="Electronics, Industrial...">
               </div>
-              <div class="field-group">
-                <label>Brand</label>
-                <input type="text" formControlName="brand" placeholder="Official Brand Name">
+              <div class="field-wrap">
+                <label class="spec-label">Brand</label>
+                <input type="text" class="spec-input" formControlName="brand" placeholder="Official Brand Name">
               </div>
-            </div>
-
-            <div class="field-group full">
-              <label>Detailed Description</label>
-              <textarea formControlName="description" rows="4" placeholder="Mention key specs, materials, or features..."></textarea>
             </div>
           </div>
+        </div>
 
-          <!-- Market & Inventory Section -->
-          <div class="form-section">
-            <h3 class="section-label">Market Value & Inventory</h3>
+        <!-- Market & Logic Section -->
+        <div class="spec-card">
+          <div class="spec-card-header">
+            <span class="label">Logistics & Value</span>
+            <h2 class="spec-section-title">Financials & Inventory</h2>
+          </div>
 
+          <div class="spec-fields">
             <div class="field-row">
-              <div class="field-group">
-                <label>Cost Price ($)*</label>
-                <input type="number" formControlName="costPrice">
+              <div class="field-wrap">
+                <label class="spec-label">Cost Basis ($)*</label>
+                <input type="number" class="spec-input" formControlName="costPrice">
               </div>
-              <div class="field-group">
-                <label>Selling Price ($)*</label>
-                <input type="number" formControlName="sellingPrice">
-              </div>
-            </div>
-
-            <div class="v-error full-width" *ngIf="productForm.errors?.['pricingError'] && productForm.get('sellingPrice')?.touched">
-              Notice: Selling price must be greater than or equal to cost.
-            </div>
-
-            <div class="field-row">
-              <div class="field-group">
-                <label>Reorder Threshold*</label>
-                <input type="number" formControlName="reorderLevel">
-              </div>
-              <div class="field-group">
-                <label>Max Capacity*</label>
-                <input type="number" formControlName="maxStockLevel">
+              <div class="field-wrap">
+                <label class="spec-label">Market Selling Price ($)*</label>
+                <input type="number" class="spec-input highlight" formControlName="sellingPrice">
               </div>
             </div>
 
             <div class="field-row">
-              <div class="field-group">
-                <label>Unit of Measure</label>
-                <select formControlName="unitOfMeasure">
+              <div class="field-wrap">
+                <label class="spec-label">Reorder Threshold*</label>
+                <input type="number" class="spec-input" formControlName="reorderLevel">
+              </div>
+              <div class="field-wrap">
+                <label class="spec-label">Max Network Capacity*</label>
+                <input type="number" class="spec-input" formControlName="maxStockLevel">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field-wrap">
+                <label class="spec-label">Unit of Measure</label>
+                <select class="spec-input" formControlName="unitOfMeasure">
                   <option value="pcs">Pieces (pcs)</option>
                   <option value="kg">Kilograms (kg)</option>
                   <option value="box">Standard Box</option>
                   <option value="set">Custom Set</option>
                 </select>
               </div>
-              <div class="field-group">
-                <label>Lead Time (Days)</label>
-                <input type="number" formControlName="leadTimeDays">
+              <div class="field-wrap">
+                <label class="spec-label">Supply Lead Time (Days)</label>
+                <input type="number" class="spec-input" formControlName="leadTimeDays">
               </div>
             </div>
 
-            <div class="field-group checkbox-row" *ngIf="isEditMode">
-              <label class="toggle-label">
+            <div class="field-wrap checkbox-field" *ngIf="isEditMode">
+              <label class="spec-toggle">
                 <input type="checkbox" formControlName="isActive">
-                <div class="toggle-slider"></div>
-                <span class="toggle-text">Active for ongoing inventory transactions</span>
+                <span class="toggle-track"></span>
+                <span class="toggle-label">Active for ongoing inventory transactions</span>
               </label>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="form-footer">
-          <button type="button" class="btn btn-ghost" (click)="onCancel()" [disabled]="submitting">Discard Changes</button>
-          <button type="submit" class="btn btn-primary" [disabled]="submitting || productForm.invalid">
-            <span class="spinner-mini" *ngIf="submitting"></span>
-            {{ submitting ? 'Finalizing...' : (isEditMode ? 'Commit Updates' : 'Confirm Registration') }}
-          </button>
-        </div>
+      <div class="spec-footer">
+        <button type="button" class="btn btn-ghost" (click)="onCancel()" [disabled]="submitting">Discard Spec</button>
+        <button type="submit" class="btn btn-primary" [disabled]="submitting || productForm.invalid">
+          <span class="spinner-mini" *ngIf="submitting"></span>
+          {{ submitting ? 'Processing...' : (isEditMode ? 'Commit Specification' : 'Register Specification') }}
+        </button>
       </div>
     </form>
   </div>

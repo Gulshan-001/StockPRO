@@ -29,8 +29,8 @@ export class ProductDetailComponent implements OnInit {
     private productService: ProductService,
     private authService: AuthService
   ) {
-    const role = this.authService.userRole;
-    this.canManage = role === 'Inventory Manager' || role === 'Admin';
+    const role = this.authService.userRole.toUpperCase();
+    this.canManage = role === 'INVENTORY MANAGER' || role === 'ADMIN';
   }
 
   ngOnInit(): void {

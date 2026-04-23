@@ -16,6 +16,48 @@ services:
       - stockpro-network
     restart: always
 
+  auth:
+    build:
+      context: ./StockPro.Auth
+    container_name: stockpro-auth
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
+  product-item:
+    build:
+      context: ./StockPro.ProductItem
+    container_name: stockpro-product
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5001
+    ports:
+      - "5001:5001"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
+  warehouse-stock:
+    build:
+      context: ./StockPro.WarehouseStock
+    container_name: stockpro-warehouse
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5002
+    ports:
+      - "5002:5002"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: stockpro-admin

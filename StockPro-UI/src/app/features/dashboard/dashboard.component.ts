@@ -23,10 +23,16 @@ import { RouterModule } from '@angular/router';
           <p style="color: var(--color-muted); font-size: 13px; margin-top: 8px;">Update your details and security preferences.</p>
         </div>
         
-        <div (click)="goProducts()" style="background: var(--color-surface); border: 1px solid var(--color-border); padding: 40px; border-radius: 20px; cursor: pointer; transition: all 0.3s; height: 100%;">
+        <div *ngIf="isAdmin || isManager" (click)="goProducts()" style="background: var(--color-surface); border: 1px solid var(--color-border); padding: 40px; border-radius: 20px; cursor: pointer; transition: all 0.3s; height: 100%;">
           <span class="label">System</span>
           <h3 style="font-size: 20px; margin-top: 10px;">Product Catalog</h3>
           <p style="color: var(--color-muted); font-size: 13px; margin-top: 8px;">Access master data, SKU lookup, and pricing rules.</p>
+        </div>
+
+        <div (click)="goWarehouses()" style="background: var(--color-surface); border: 1px solid var(--color-border); padding: 40px; border-radius: 20px; cursor: pointer; transition: all 0.3s; height: 100%;">
+          <span class="label">Logistics</span>
+          <h3 style="font-size: 20px; margin-top: 10px;">Warehouse Network</h3>
+          <p style="color: var(--color-muted); font-size: 13px; margin-top: 8px;">Monitor stock levels and capacity across locations.</p>
         </div>
       </div>
 
@@ -46,7 +52,10 @@ export class DashboardComponent implements OnInit {
   userName = '';
   userRole = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
+
+  get isAdmin(): boolean { return this.userRole.toUpperCase() === 'ADMIN'; }
+  get isManager(): boolean { return this.userRole.toUpperCase() === 'INVENTORY MANAGER'; }
 
   ngOnInit(): void {
     const user = this.authService.currentUser;
@@ -54,7 +63,8 @@ export class DashboardComponent implements OnInit {
     this.userRole = user?.role ?? '';
   }
 
-  goProfile() : void { this.router.navigate(['/auth/profile']); }
+  goProfile(): void { this.router.navigate(['/auth/profile']); }
   goProducts(): void { this.router.navigate(['/products']); }
-  logout()     : void { this.authService.logout(); }
+  goWarehouses(): void { this.router.navigate(['/warehouses']); }
+  logout(): void { this.authService.logout(); }
 }

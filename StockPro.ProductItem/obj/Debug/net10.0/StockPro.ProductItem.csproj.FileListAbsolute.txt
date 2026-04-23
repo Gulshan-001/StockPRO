@@ -1,0 +1,8 @@
+C:\StockPRO\StockPro.ProductItem\StockPro.ProductItem\obj\Debug\net10.0\StockPro.ProductItem.csproj.AssemblyReference.cache
+C:\StockPRO\StockPro.ProductItem\StockPro.ProductItem\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\StockPRO\StockPro.ProductItem\StockPro.ProductItem\obj\Debug\net10.0\StockPro.ProductItem.GeneratedMSBuildEditorConfig.editorconfig
+C:\StockPRO\StockPro.ProductItem\StockPro.ProductItem\obj\Debug\net10.0\StockPro.ProductItem.AssemblyInfoInputs.cache
+C:\StockPRO\StockPro.ProductItem\StockPro.ProductItem\obj\Debug\net10.0\StockPro.ProductItem.AssemblyInfo.cs
+C:\StockPRO\StockPro.ProductItem\StockPro.ProductItem\obj\Debug\net10.0\StockPro.ProductItem.csproj.CoreCompileInputs.cache
+C:\StockPRO\StockPro.ProductItem\StockPro.ProductItem\obj\Debug\net10.0\StockPro.ProductItem.MvcApplicationPartsAssemblyInfo.cache
+C:\StockPRO\StockPro.ProductItem\StockPro.ProductItem\obj\Debug\net10.0\StockPro.ProductItem.sourcelink.json

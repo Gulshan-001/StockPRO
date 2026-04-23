@@ -118,11 +118,39 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// ─── Auto-migrate on startup ─────────────────────────────────────────
+// ─── Auto-migrate and Seed on startup ────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    var services = scope.ServiceProvider;
+    var db = services.GetRequiredService<AuthDbContext>();
     db.Database.Migrate();
+
+    // Seeding Roles and Admin User
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roles = { "ADMIN", "INVENTORY MANAGER", "STAFF" };
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+    var adminEmail = "admin@stockpro.com";
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        var admin = new ApplicationUser
+        {
+            FullName = "System Administrator",
+            Email = adminEmail,
+            UserName = adminEmail,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
+        await userManager.CreateAsync(admin, "Admin@123");
+        await userManager.AddToRoleAsync(admin, "ADMIN");
+    }
 }
 
 app.Run();

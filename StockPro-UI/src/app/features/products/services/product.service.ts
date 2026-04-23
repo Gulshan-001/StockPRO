@@ -8,7 +8,7 @@ import { Product, ProductCreateDto, ProductUpdateDto } from '../models/product.m
   providedIn: 'root'
 })
 export class ProductService {
-  private readonly API = `${environment.inventoryApiUrl}/api/products`;
+  private readonly API = `${environment.productApiUrl}/api/products`;
 
   constructor(private http: HttpClient) {}
 
