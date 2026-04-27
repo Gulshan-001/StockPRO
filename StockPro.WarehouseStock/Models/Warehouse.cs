@@ -32,7 +32,5 @@ namespace StockPro.WarehouseStock.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation property
-        public ICollection<StockLevel> StockLevels { get; set; } = new List<StockLevel>();
     }
 }

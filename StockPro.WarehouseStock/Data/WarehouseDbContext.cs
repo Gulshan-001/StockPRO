@@ -8,7 +8,6 @@ namespace StockPro.WarehouseStock.Data
         public WarehouseDbContext(DbContextOptions<WarehouseDbContext> options) : base(options) { }
 
         public DbSet<Warehouse> Warehouses { get; set; }
-        public DbSet<StockLevel> StockLevels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

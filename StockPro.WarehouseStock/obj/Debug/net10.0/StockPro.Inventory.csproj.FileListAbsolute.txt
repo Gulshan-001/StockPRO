@@ -1,9 +1,0 @@
-C:\StockPRO\StockPro.Inventory\obj\Debug\net10.0\StockPro.Inventory.csproj.AssemblyReference.cache
-C:\StockPRO\StockPro.Inventory\obj\Debug\net10.0\rpswa.dswa.cache.json
-C:\StockPRO\StockPro.Inventory\obj\Debug\net10.0\StockPro.Inventory.GeneratedMSBuildEditorConfig.editorconfig
-C:\StockPRO\StockPro.Inventory\obj\Debug\net10.0\StockPro.Inventory.AssemblyInfoInputs.cache
-C:\StockPRO\StockPro.Inventory\obj\Debug\net10.0\StockPro.Inventory.AssemblyInfo.cs
-C:\StockPRO\StockPro.Inventory\obj\Debug\net10.0\StockPro.Inventory.csproj.CoreCompileInputs.cache
-C:\StockPRO\StockPro.Inventory\obj\Debug\net10.0\StockPro.Inventory.MvcApplicationPartsAssemblyInfo.cs
-C:\StockPRO\StockPro.Inventory\obj\Debug\net10.0\StockPro.Inventory.MvcApplicationPartsAssemblyInfo.cache
-C:\StockPRO\StockPro.Inventory\obj\Debug\net10.0\StockPro.Inventory.sourcelink.json

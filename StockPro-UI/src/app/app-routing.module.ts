@@ -23,6 +23,11 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./features/warehouses/warehouses.routes').then(r => r.WAREHOUSE_ROUTES)
   },
+  {
+    path: 'movements',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./features/movements/movements.routes').then(r => r.MOVEMENT_ROUTES)
+  },
   { path: 'unauthorized', redirectTo: 'auth/login' },
   { path: '**', redirectTo: 'auth/login' }
 ];

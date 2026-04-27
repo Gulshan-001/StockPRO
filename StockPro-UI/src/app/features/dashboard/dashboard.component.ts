@@ -34,6 +34,12 @@ import { RouterModule } from '@angular/router';
           <h3 style="font-size: 20px; margin-top: 10px;">Warehouse Network</h3>
           <p style="color: var(--color-muted); font-size: 13px; margin-top: 8px;">Monitor stock levels and capacity across locations.</p>
         </div>
+
+        <div (click)="goMovements()" style="background: var(--color-surface); border: 1px solid var(--color-border); padding: 40px; border-radius: 20px; cursor: pointer; transition: all 0.3s; height: 100%;">
+          <span class="label">Operations</span>
+          <h3 style="font-size: 20px; margin-top: 10px;">Stock Movements</h3>
+          <p style="color: var(--color-muted); font-size: 13px; margin-top: 8px;">Execute transfers, receipts, and audit stock history.</p>
+        </div>
       </div>
 
       <div style="margin-top: auto; padding-top: 60px;">
@@ -66,5 +72,6 @@ export class DashboardComponent implements OnInit {
   goProfile(): void { this.router.navigate(['/auth/profile']); }
   goProducts(): void { this.router.navigate(['/products']); }
   goWarehouses(): void { this.router.navigate(['/warehouses']); }
+  goMovements(): void { this.router.navigate(['/movements']); }
   logout(): void { this.authService.logout(); }
 }

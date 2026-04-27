@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   postgres:
@@ -53,6 +52,20 @@ services:
       - ASPNETCORE_URLS=http://+:5002
     ports:
       - "5002:5002"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
+  stock-movement:
+    build:
+      context: ./StockPro.StockMovement
+    container_name: stockpro-movement
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5003
+    ports:
+      - "5003:5003"
     depends_on:
       - postgres
     networks:

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { WarehouseService } from '../../services/warehouse.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { Router } from '@angular/router';
 import { Warehouse } from '../../models/warehouse.model';
 import { Observable } from 'rxjs';
 
@@ -68,7 +69,7 @@ import { Observable } from 'rxjs';
               <p class="subtitle" style="margin-bottom: 24px;">
                 {{ isAdmin ? 'Your logistics network is currently empty. Initialize your first storage location to begin tracking stock.' : 'No storage locations have been configured yet. Please contact your system administrator.' }}
               </p>
-              <button *ngIf="isAdmin" class="btn btn-primary" (click)="onCreate()">Initialize Network</button>
+              <button *ngIf="isAdmin" class="btn btn-primary" (click)="onSeed()">Initialize Network</button>
             </div>
           </div>
         </div>
@@ -226,7 +227,8 @@ export class WarehouseListComponent implements OnInit {
 
   constructor(
     private warehouseService: WarehouseService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     this.warehouses$ = this.warehouseService.getAllWarehouses();
     this.isAdmin = this.authService.userRole.toUpperCase() === 'ADMIN';
@@ -240,6 +242,19 @@ export class WarehouseListComponent implements OnInit {
   }
 
   onCreate(): void {
-    // Navigate to create or open modal
+    this.router.navigate(['/warehouses/new']);
+  }
+
+  onSeed(): void {
+    const seeds = [
+      { name: 'Central Distribution Hub', location: 'New Delhi', address: 'Plot 45, Okhla Phase III, New Delhi', capacity: 50000, phone: '+91 11 4567 8901' },
+      { name: 'Western Transit Point', location: 'Mumbai', address: 'Sector 10, Kalamboli, Navi Mumbai', capacity: 35000, phone: '+91 22 2745 6321' }
+    ];
+
+    seeds.forEach(s => {
+      this.warehouseService.createWarehouse(s).subscribe(() => {
+        this.warehouses$ = this.warehouseService.getAllWarehouses();
+      });
+    });
   }
 }

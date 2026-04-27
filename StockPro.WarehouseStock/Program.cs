@@ -40,7 +40,6 @@ builder.Services.AddAuthorization();
 
 // ─── Services DI ────────────────────────────────────────────────────
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
-builder.Services.AddScoped<IStockService, StockService>();
 
 // ─── CORS ───────────────────────────────────────────────────────────
 builder.Services.AddCors(options =>

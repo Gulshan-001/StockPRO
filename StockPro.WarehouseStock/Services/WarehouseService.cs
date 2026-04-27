@@ -81,9 +81,9 @@ namespace StockPro.WarehouseStock.Services
             var warehouse = await _context.Warehouses.FindAsync(id);
             if (warehouse == null) return false;
 
-            if (await _context.StockLevels.AnyAsync(s => s.WarehouseId == id && s.Quantity > 0))
-                throw new InvalidOperationException("Cannot delete warehouse with existing stock.");
-
+            // Note: In a microservices architecture, we should call the StockMovement service 
+            // to verify if there is remaining stock before deletion.
+            
             _context.Warehouses.Remove(warehouse);
             await _context.SaveChangesAsync();
             return true;
