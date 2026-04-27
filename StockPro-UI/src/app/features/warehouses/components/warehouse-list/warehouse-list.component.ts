@@ -5,7 +5,8 @@ import { WarehouseService } from '../../services/warehouse.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { Warehouse } from '../../models/warehouse.model';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
+import { StockLevel } from '../../models/warehouse.model';
 
 @Component({
   selector: 'app-warehouse-list',
@@ -27,7 +28,7 @@ import { Observable } from 'rxjs';
           </div>
         </header>
 
-        <div class="warehouse-grid" *ngIf="(warehouses$ | async) as warehouses; else loading">
+        <div class="warehouse-grid" *ngIf="warehouses.length > 0; else loading">
           <div *ngFor="let warehouse of warehouses" class="warehouse-card" [routerLink]="[warehouse.warehouseId]">
             <div class="card-header">
               <span class="label">{{ warehouse.isActive ? 'Operating' : 'Closed' }}</span>
@@ -222,7 +223,8 @@ import { Observable } from 'rxjs';
   `]
 })
 export class WarehouseListComponent implements OnInit {
-  warehouses$: Observable<Warehouse[]>;
+  warehouses: Warehouse[] = [];
+  stockLevels: StockLevel[] = [];
   isAdmin = false;
 
   constructor(
@@ -230,15 +232,31 @@ export class WarehouseListComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
-    this.warehouses$ = this.warehouseService.getAllWarehouses();
     this.isAdmin = this.authService.userRole.toUpperCase() === 'ADMIN';
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.loadData();
+  }
+
+  loadData(): void {
+    forkJoin({
+      warehouses: this.warehouseService.getAllWarehouses(),
+      stock: this.warehouseService.getStockLevels()
+    }).subscribe({
+      next: (res) => {
+        this.warehouses = res.warehouses;
+        this.stockLevels = res.stock;
+      }
+    });
+  }
 
   getUsagePercentage(warehouse: Warehouse): number {
     if (!warehouse.capacity) return 0;
-    return Math.round((warehouse.usedCapacity / warehouse.capacity) * 100);
+    const used = this.stockLevels
+      .filter(s => s.warehouseId === warehouse.warehouseId)
+      .reduce((sum, s) => sum + s.quantity, 0);
+    return Math.round((used / warehouse.capacity) * 100);
   }
 
   onCreate(): void {
@@ -253,7 +271,7 @@ export class WarehouseListComponent implements OnInit {
 
     seeds.forEach(s => {
       this.warehouseService.createWarehouse(s).subscribe(() => {
-        this.warehouses$ = this.warehouseService.getAllWarehouses();
+        this.loadData();
       });
     });
   }

@@ -9,9 +9,12 @@ import { Warehouse, WarehouseCreateDto, WarehouseUpdateDto, StockLevel, StockIni
 })
 export class WarehouseService {
   private readonly WAREHOUSE_API = `${environment.warehouseApiUrl}/api/warehouses`;
-  private readonly STOCK_API = `${environment.warehouseApiUrl}/api/stock`;
+  private readonly STOCK_API = `${environment.movementApiUrl}/api/stock`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log('WarehouseService initialized. Stock API:', this.STOCK_API);
+  }
+
 
   // Warehouses
   getAllWarehouses(): Observable<Warehouse[]> {

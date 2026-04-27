@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MovementService, Movement } from '../../services/movement.service';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ProductService } from '../../../products/services/product.service';
+import { Product } from '../../../products/models/product.model';
 
 @Component({
   selector: 'app-movement-history',
@@ -51,12 +53,13 @@ import { FormsModule } from '@angular/forms';
               <thead>
                 <tr style="background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--color-border);">
                   <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 14%;">Timestamp</th>
-                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 12%;">Type</th>
-                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 12%;">Warehouse</th>
-                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; text-align: right; width: 8%;">Qty</th>
-                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; text-align: right; width: 10%;">Balance</th>
-                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 28%;">Audit Notes</th>
-                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 16%;">Signature</th>
+                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 10%;">Type</th>
+                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 15%;">Product</th>
+                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 10%;">Warehouse</th>
+                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; text-align: right; width: 6%;">Qty</th>
+                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; text-align: right; width: 8%;">Balance</th>
+                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 25%;">Audit Notes</th>
+                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 12%;">Signature</th>
                 </tr>
               </thead>
               <tbody>
@@ -68,6 +71,10 @@ import { FormsModule } from '@angular/forms';
                     <span class="badge" [ngClass]="getBadgeClass(m.movementType)" style="padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; letter-spacing: 0.5px;">
                       {{ m.movementType.replace('_', ' ') }}
                     </span>
+                  </td>
+                  <td style="padding: 16px 24px;">
+                    <div style="font-weight: 600; color: #fff; font-size: 13px;">{{ getProductName(m.productId) }}</div>
+                    <div style="font-size: 9px; color: var(--color-muted); font-family: 'Courier New', monospace;">ID: {{ m.productId | slice:0:8 | uppercase }}</div>
                   </td>
                   <td style="padding: 16px 24px; font-family: 'Courier New', monospace; color: var(--color-muted); font-size: 12px;">{{ m.warehouseId | slice:0:8 }}</td>
                   <td style="padding: 16px 24px; text-align: right; font-weight: 700; font-size: 15px;" [style.color]="m.quantity > 0 ? '#4ade80' : '#f87171'">
@@ -110,11 +117,17 @@ import { FormsModule } from '@angular/forms';
 })
 export class MovementHistoryComponent implements OnInit {
   movements: Movement[] = [];
+  products: Product[] = [];
   filterType = '';
 
-  constructor(private movementService: MovementService, private router: Router) { }
+  constructor(
+    private movementService: MovementService, 
+    private productService: ProductService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
+    this.loadProducts();
     this.loadHistory();
   }
 
@@ -126,6 +139,15 @@ export class MovementHistoryComponent implements OnInit {
     this.movementService.getHistory(undefined, undefined, this.filterType).subscribe(m => {
       this.movements = m;
     });
+  }
+
+  loadProducts(): void {
+    this.productService.getAllProducts().subscribe(p => this.products = p);
+  }
+
+  getProductName(id: string): string {
+    const p = this.products.find(x => x.productId === id);
+    return p ? p.name : 'Unknown Product';
   }
 
   getBadgeClass(type: string): string {

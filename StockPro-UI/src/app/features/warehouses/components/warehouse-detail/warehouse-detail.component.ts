@@ -4,6 +4,8 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { WarehouseService } from '../../services/warehouse.service';
 import { Warehouse, StockLevel } from '../../models/warehouse.model';
 import { StockTableComponent } from '../stock-table/stock-table.component';
+import { ProductService } from '../../../products/services/product.service';
+import { Product } from '../../../products/models/product.model';
 import { switchMap } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
 
@@ -14,9 +16,11 @@ import { forkJoin } from 'rxjs';
   template: `
     <div class="app-container bg-inventory animate" *ngIf="warehouse">
       <div class="content-panel">
-        <nav class="breadcrumb">
-          <a routerLink="/warehouses">Logistics</a> / <span>{{ warehouse.name }}</span>
-        </nav>
+        <div class="navigation-trail" style="margin-bottom: 2rem;">
+          <a routerLink="/warehouses" class="back-link" style="cursor: pointer; text-decoration: none; color: var(--color-muted); font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px;">
+            <span>←</span> BACK TO LOGISTICS
+          </a>
+        </div>
 
         <header class="detail-header">
           <div class="title-section">
@@ -39,7 +43,7 @@ import { forkJoin } from 'rxjs';
           </div>
           <div class="stat-card">
             <span class="label">Used Capacity</span>
-            <span class="stat-value">{{ warehouse.usedCapacity }}</span>
+            <span class="stat-value">{{ getTotalUsedCapacity() }}</span>
           </div>
           <div class="stat-card">
             <span class="label">Utilization</span>
@@ -146,7 +150,8 @@ export class WarehouseDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private warehouseService: WarehouseService
+    private warehouseService: WarehouseService,
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -155,19 +160,33 @@ export class WarehouseDetailComponent implements OnInit {
         const id = params['id'];
         return forkJoin({
           warehouse: this.warehouseService.getWarehouseById(id),
-          stock: this.warehouseService.getStockLevels(id)
+          stock: this.warehouseService.getStockLevels(id),
+          products: this.productService.getAllProducts()
         });
       })
     ).subscribe({
       next: (data) => {
         this.warehouse = data.warehouse;
-        this.stockLevels = data.stock;
+        // Enrich stock levels with product data
+        this.stockLevels = data.stock.map(s => {
+          const p = data.products.find(x => x.productId === s.productId);
+          return {
+            ...s,
+            productName: p ? p.name : 'Unknown Product',
+            productSKU: p ? p.sku : 'N/A',
+            availableQuantity: s.quantity - s.reservedQuantity
+          };
+        });
       }
     });
   }
 
+  getTotalUsedCapacity(): number {
+    return this.stockLevels.reduce((sum, s) => sum + s.quantity, 0);
+  }
+
   getUsagePercentage(): number {
     if (!this.warehouse || !this.warehouse.capacity) return 0;
-    return Math.round((this.warehouse.usedCapacity / this.warehouse.capacity) * 100);
+    return Math.round((this.getTotalUsedCapacity() / this.warehouse.capacity) * 100);
   }
 }
