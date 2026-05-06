@@ -1,0 +1,109 @@
+/* ──────────────────────────────────────────────────────────────
+   Report Detail: Spec-Sheet Ledger Theme
+   Consistency Upgrade: Alignment with Product Registry
+────────────────────────────────────────────────────────────── */
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+.content-panel.full-width {
+    padding-top: 100px;
+}
+
+/* ── Header Section ── */
+.ledger-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+}
+
+.ledger-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: #ffffff;
+    margin-bottom: 8px;
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+.ledger-subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 18px;
+}
+
+/* ── Ledger Container ── */
+.ledger-container {
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.ledger-head {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+    padding: 0 32px 16px 32px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-muted);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Specific Column Widths for Report View */
+.col-sku { flex: 0 0 120px; }
+.col-name { flex: 1; }
+.col-qty { flex: 0 0 100px; }
+.col-value { flex: 0 0 150px; }
+.col-date { flex: 0 0 120px; }
+.col-delta { flex: 0 0 120px; }
+
+/* ── Ledger Row ── */
+.ledger-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--color-border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+}
+
+.ledger-row:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.td-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #fff;
+}
+
+.td-primary {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.td-val {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.td-alert {
+    color: #ef4444;
+    font-weight: 700;
+}
+
+.animate {
+    animation: fadeIn 0.6s ease-out both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,160 @@
+<div class="app-container bg-inventory animate">
+  <div class="content-panel full-width">
+    
+    <div class="navigation-trail">
+      <a routerLink="/dashboard" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <div class="ledger-header-section">
+      <div class="title-group">
+        <h1 class="ledger-title">Analytics Intelligence</h1>
+        <p class="ledger-subtitle">Unified inventory valuation and movement audit logs.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline" (click)="takeSnapshot()" [disabled]="loading">
+          {{ loading ? 'PROCESSING...' : 'EXECUTE SNAPSHOT' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter Console -->
+    <div class="search-matrix">
+      <div class="filter-input-group">
+        <input type="date" [(ngModel)]="startDate" class="matrix-search-input">
+        <span class="date-separator">TO</span>
+        <input type="date" [(ngModel)]="endDate" class="matrix-search-input">
+      </div>
+      <button class="btn btn-primary" (click)="applyFilters()">AUDIT</button>
+    </div>
+
+    <!-- KPI Matrix -->
+    <section class="kpi-matrix">
+      <div class="kpi-card">
+        <span class="kpi-label">Asset Valuation</span>
+        <div class="kpi-value">${{ inventoryValue?.totalStockValue | number:'1.0-0' }}</div>
+        <div class="kpi-trend">Across {{ inventoryValue?.totalWarehouses }} Warehouses</div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Turnover Velocity</span>
+        <div class="kpi-value">{{ turnover?.turnoverRate || '0.0' }}x</div>
+        <div class="kpi-trend">Periodical Ratio</div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Capital Risk</span>
+        <div class="kpi-value">{{ deadStock.length }} Items</div>
+        <div class="kpi-trend">Inactive 90+ Days</div>
+      </div>
+
+      <div class="kpi-card">
+        <span class="kpi-label">Supply Delta</span>
+        <div class="kpi-value">{{ lowStock.length }} Items</div>
+        <div class="kpi-trend">Immediate Restock</div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <nav class="tab-matrix">
+      <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">ASSET DISTRIBUTION</button>
+      <button class="tab-btn" [class.active]="activeTab === 'movement'" (click)="setTab('movement')">MOVEMENT AUDIT</button>
+      <button class="tab-btn" [class.active]="activeTab === 'inventory'" (click)="setTab('inventory')">STOCK HEALTH</button>
+    </nav>
+
+    <!-- Analytics Body -->
+    <main class="analytics-body" *ngIf="!loading">
+      
+      <!-- Overview Tab -->
+      <ng-container *ngIf="activeTab === 'overview'">
+        <div class="ledger-block">
+          <div class="block-header">
+            <span class="block-title">Warehouse Allocation</span>
+          </div>
+          <div class="technical-bar-chart">
+            <div class="chart-row" *ngFor="let wh of warehouseDistribution">
+              <span class="row-label">{{ wh.warehouseName }}</span>
+              <div class="bar-track">
+                <div class="bar-fill" [style.width]="getPercentage(wh.stockValue, getMaxValue(warehouseDistribution))"></div>
+              </div>
+              <span class="row-value">${{ wh.stockValue | number:'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ledger-block">
+          <div class="block-header">
+            <span class="block-title">Velocity Leaders</span>
+          </div>
+          <div class="technical-bar-chart">
+            <div class="chart-row" *ngFor="let prod of topProducts">
+              <span class="row-label">{{ prod.productName }}</span>
+              <div class="bar-track">
+                <div class="bar-fill" [style.width]="getPercentage(prod.totalUnitsMoved, getMaxMovement(topProducts))"></div>
+              </div>
+              <span class="row-value">{{ prod.totalUnitsMoved }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Movement Tab -->
+      <ng-container *ngIf="activeTab === 'movement'">
+        <div class="ledger-block" style="grid-column: span 2;">
+          <div class="block-header">
+            <span class="block-title">Operational Throughput</span>
+          </div>
+          <div class="movement-matrix">
+            <div class="m-stat-card">
+              <div class="m-stat-val">{{ movementSummary?.totalMovements }}</div>
+              <span class="m-stat-label">System Logs</span>
+            </div>
+            <div class="m-stat-card">
+              <div class="m-stat-val">{{ movementSummary?.totalStockIn }}</div>
+              <span class="m-stat-label">Inbound Volume</span>
+            </div>
+            <div class="m-stat-card">
+              <div class="m-stat-val">{{ movementSummary?.totalStockOut }}</div>
+              <span class="m-stat-label">Outbound Volume</span>
+            </div>
+            <div class="m-stat-card">
+              <div class="m-stat-val">{{ movementSummary?.totalTransfers }}</div>
+              <span class="m-stat-label">Internal Transfers</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Inventory Health Tab -->
+      <ng-container *ngIf="activeTab === 'inventory'">
+        <div class="ledger-block" style="grid-column: span 2;">
+          <div class="block-header">
+            <span class="block-title">Stock Level Discrepancies</span>
+          </div>
+          <table class="health-ledger">
+            <thead>
+              <tr>
+                <th>IDENTIFIER</th>
+                <th>NOMENCLATURE</th>
+                <th>RESERVE</th>
+                <th>THRESHOLD</th>
+                <th>DELTA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of lowStock">
+                <td class="td-sku">{{ item.sku }}</td>
+                <td class="td-name">{{ item.productName }}</td>
+                <td class="td-val">{{ item.currentStock }} Units</td>
+                <td class="td-val">{{ item.reorderLevel }} Units</td>
+                <td class="td-delta">-{{ item.shortfallUnits }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+
+    </main>
+
+  </div>
+  <div class="visual-panel"></div>
+</div>

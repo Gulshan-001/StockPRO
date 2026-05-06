@@ -1,5 +1,10 @@
 <Solution>
   <Project Path="StockPro.Auth/StockPro.Auth.csproj" />
-  <Project Path="StockPro.Inventory/StockPro.Inventory.csproj" />
+  <Project Path="StockPro.ProductItem/StockPro.ProductItem.csproj" />
+  <Project Path="StockPro.WarehouseStock/StockPro.WarehouseStock.csproj" />
   <Project Path="StockPro.StockMovement/StockPro.StockMovement.csproj" />
+  <Project Path="StockPro.Purchase/StockPro.Purchase.csproj" />
+  <Project Path="StockPro.Alert/StockPro.Alert.csproj" />
+  <Project Path="StockPro.Analytics/StockPro.Analytics.csproj" />
+  <Project Path="StockPro.Analytics.Tests/StockPro.Analytics.Tests.csproj" />
 </Solution>

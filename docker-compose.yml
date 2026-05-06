@@ -100,6 +100,36 @@ services:
       - stockpro-network
     restart: always
 
+  alert:
+    build:
+      context: ./StockPro.Alert
+    container_name: stockpro-alert
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5005
+    ports:
+      - "5005:5005"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
+  analytics:
+    build:
+      context: ./StockPro.Analytics
+    container_name: stockpro-analytics
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5006
+    ports:
+      - "5006:5006"
+    depends_on:
+      - postgres
+      - warehouse-stock
+      - stock-movement
+    networks:
+      - stockpro-network
+
 networks:
   stockpro-network:
     driver: bridge

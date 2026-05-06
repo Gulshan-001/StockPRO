@@ -1,0 +1,73 @@
+<div class="app-container bg-inventory animate">
+  <div class="content-panel full-width">
+    
+    <div class="navigation-trail">
+      <button (click)="goBack()" class="back-link" style="background:none;border:none;cursor:pointer;">← Back to Analytics</button>
+    </div>
+
+    <div class="ledger-header-section">
+      <div class="title-group">
+        <h1 class="ledger-title">{{ reportTitle }}</h1>
+        <p class="ledger-subtitle">System generated audit trail for the selected parameters.</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline">EXPORT PDF</button>
+      </div>
+    </div>
+
+    <div class="ledger-container">
+      <!-- Ledger Head -->
+      <div class="ledger-head" *ngIf="reportType === 'dead-stock'">
+        <div class="col-sku">SKU</div>
+        <div class="col-name">NOMENCLATURE</div>
+        <div class="col-qty">STOCK</div>
+        <div class="col-value">VALUATION</div>
+        <div class="col-date">LAST LOG</div>
+        <div class="col-delta">INACTIVITY</div>
+      </div>
+
+      <div class="ledger-head" *ngIf="reportType === 'low-stock'">
+        <div class="col-sku">SKU</div>
+        <div class="col-name">NOMENCLATURE</div>
+        <div class="col-qty">STOCK</div>
+        <div class="col-qty">THRESHOLD</div>
+        <div class="col-delta">SHORTFALL</div>
+        <div class="col-delta">STATUS</div>
+      </div>
+
+      <!-- Ledger Body -->
+      <div class="ledger-body" *ngIf="!loading">
+        <!-- Dead Stock Rows -->
+        <ng-container *ngIf="reportType === 'dead-stock'">
+          <div *ngFor="let item of reportData" class="ledger-row">
+            <div class="td-mono">{{ item.sku }}</div>
+            <div class="td-primary">{{ item.productName }}</div>
+            <div class="td-val">{{ item.currentStock }}</div>
+            <div class="td-mono">${{ item.stockValue | number:'1.2-2' }}</div>
+            <div class="td-val">{{ item.lastMovementDate ? (item.lastMovementDate | date:'yyyy-MM-dd') : '---' }}</div>
+            <div class="td-alert">{{ item.daysSinceLastMovement }} DAYS</div>
+          </div>
+        </ng-container>
+
+        <!-- Low Stock Rows -->
+        <ng-container *ngIf="reportType === 'low-stock'">
+          <div *ngFor="let item of reportData" class="ledger-row">
+            <div class="td-mono">{{ item.sku }}</div>
+            <div class="td-primary">{{ item.productName }}</div>
+            <div class="td-val">{{ item.currentStock }}</div>
+            <div class="td-val">{{ item.reorderLevel }}</div>
+            <div class="td-alert">-{{ item.shortfallUnits }}</div>
+            <div class="td-alert">CRITICAL</div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Loading State -->
+      <div class="ledger-loading" *ngIf="loading" style="padding: 100px; text-align: center; color: var(--color-muted);">
+        AUDITING SYSTEM DATA...
+      </div>
+    </div>
+
+  </div>
+  <div class="visual-panel"></div>
+</div>
