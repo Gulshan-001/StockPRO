@@ -2,4 +2,5 @@
   <Project Path="StockPro.Auth/StockPro.Auth.csproj" />
   <Project Path="StockPro.Inventory/StockPro.Inventory.csproj" />
   <Project Path="StockPro.StockMovement/StockPro.StockMovement.csproj" />
+  <Project Path="StockPro.Analytics/StockPro.Analytics.csproj" />
 </Solution>

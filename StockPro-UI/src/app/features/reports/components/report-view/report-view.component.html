@@ -1,0 +1,223 @@
+<div class="report-view-shell">
+
+  <!-- ─── Header ─────────────────────────────────────────────────────────── -->
+  <header class="report-header">
+    <button id="btn-back" class="btn-back" (click)="goBack()">
+      ← Analytics
+    </button>
+    <h1 class="report-title">{{ reportTitle }}</h1>
+  </header>
+
+  <!-- ─── Filters ───────────────────────────────────────────────────────── -->
+  <section class="filter-bar">
+    @if (reportType !== 'low-stock') {
+      <div class="filter-group">
+        <label for="rv-startDate">From</label>
+        <input id="rv-startDate" type="date" [(ngModel)]="startDate" class="filter-input" />
+      </div>
+      <div class="filter-group">
+        <label for="rv-endDate">To</label>
+        <input id="rv-endDate" type="date" [(ngModel)]="endDate" class="filter-input" />
+      </div>
+    }
+    @if (reportType === 'dead-stock') {
+      <div class="filter-group">
+        <label for="rv-days">Days Idle ≥</label>
+        <input id="rv-days" type="number" [(ngModel)]="deadStockDays" min="1" class="filter-input filter-input-sm" />
+      </div>
+    }
+    <button id="btn-rv-apply" class="btn-apply" (click)="applyFilters()">Apply</button>
+  </section>
+
+  <!-- ─── Loading ───────────────────────────────────────────────────────── -->
+  @if (loading) {
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <span>Loading report data...</span>
+    </div>
+  }
+
+  <!-- ─── Error ─────────────────────────────────────────────────────────── -->
+  @if (error && !loading) {
+    <div class="error-state">{{ error }}</div>
+  }
+
+  @if (!loading && !error) {
+
+    <!-- Top Products -->
+    @if (reportType === 'top-products') {
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product</th>
+              <th>SKU</th>
+              <th>Units In</th>
+              <th>Units Out</th>
+              <th>Total Moved</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of topProducts; track p.productId) {
+              <tr>
+                <td class="td-rank">#{{ p.rank }}</td>
+                <td class="td-name">{{ p.productName }}</td>
+                <td class="td-mono">{{ p.sku }}</td>
+                <td class="td-in">+{{ p.totalUnitsIn }}</td>
+                <td class="td-out">-{{ p.totalUnitsOut }}</td>
+                <td class="td-total">{{ p.totalUnitsMoved }}</td>
+              </tr>
+            }
+            @if (topProducts.length === 0) {
+              <tr><td colspan="6" class="td-empty">No data for this period.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Slow Products -->
+    @if (reportType === 'slow-products') {
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr><th>Product</th><th>SKU</th><th>Units Moved</th><th>Current Stock</th><th>Stock Value</th></tr>
+          </thead>
+          <tbody>
+            @for (p of slowProducts; track p.productId) {
+              <tr>
+                <td class="td-name">{{ p.productName }}</td>
+                <td class="td-mono">{{ p.sku }}</td>
+                <td>{{ p.totalUnitsMoved }}</td>
+                <td>{{ p.currentStock }}</td>
+                <td>{{ p.stockValue | number:'1.2-2' }}</td>
+              </tr>
+            }
+            @if (slowProducts.length === 0) {
+              <tr><td colspan="5" class="td-empty">No slow-moving products found.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Dead Stock -->
+    @if (reportType === 'dead-stock') {
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr><th>Product</th><th>SKU</th><th>Stock</th><th>Value</th><th>Last Movement</th><th>Days Idle</th></tr>
+          </thead>
+          <tbody>
+            @for (item of deadStock; track item.productId) {
+              <tr>
+                <td class="td-name">{{ item.productName }}</td>
+                <td class="td-mono">{{ item.sku }}</td>
+                <td>{{ item.currentStock }}</td>
+                <td>{{ item.stockValue | number:'1.2-2' }}</td>
+                <td>{{ item.lastMovementDate ? (item.lastMovementDate | date:'dd MMM yyyy') : 'Never' }}</td>
+                <td><span class="badge-days">{{ item.daysSinceLastMovement }}d</span></td>
+              </tr>
+            }
+            @if (deadStock.length === 0) {
+              <tr><td colspan="6" class="td-empty success">✓ No dead stock detected.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Low Stock -->
+    @if (reportType === 'low-stock') {
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr><th>Product</th><th>SKU</th><th>Current Stock</th><th>Reorder Level</th><th>Shortfall</th></tr>
+          </thead>
+          <tbody>
+            @for (item of lowStock; track item.productId) {
+              <tr>
+                <td class="td-name">{{ item.productName }}</td>
+                <td class="td-mono">{{ item.sku }}</td>
+                <td><span class="badge-low">{{ item.currentStock }}</span></td>
+                <td>{{ item.reorderLevel }}</td>
+                <td class="td-out">-{{ item.shortfallUnits }}</td>
+              </tr>
+            }
+            @if (lowStock.length === 0) {
+              <tr><td colspan="5" class="td-empty success">✓ All products are above reorder level.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- PO Summary -->
+    @if (reportType === 'po-summary' && poSummary) {
+      <div class="po-summary-grid">
+        <div class="po-kpi-card">
+          <span class="po-kpi-label">Total POs</span>
+          <span class="po-kpi-value">{{ poSummary.totalPOs }}</span>
+        </div>
+        <div class="po-kpi-card">
+          <span class="po-kpi-label">Total Spend</span>
+          <span class="po-kpi-value">{{ poSummary.totalSpend | number:'1.2-2' }}</span>
+        </div>
+      </div>
+      <div class="report-table-wrap">
+        <h3 class="section-label">By Supplier</h3>
+        <table class="report-table">
+          <thead>
+            <tr><th>Supplier</th><th>PO Count</th><th>Total Spend</th></tr>
+          </thead>
+          <tbody>
+            @for (s of poSummary.bySupplier; track s.supplierId) {
+              <tr>
+                <td class="td-name">{{ s.supplierName }}</td>
+                <td>{{ s.poCount }}</td>
+                <td class="td-total">{{ s.totalSpend | number:'1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <h3 class="section-label mt-4">By Warehouse</h3>
+        <table class="report-table">
+          <thead>
+            <tr><th>Warehouse</th><th>PO Count</th><th>Total Spend</th></tr>
+          </thead>
+          <tbody>
+            @for (w of poSummary.byWarehouse; track w.warehouseId) {
+              <tr>
+                <td class="td-name">{{ w.warehouseName }}</td>
+                <td>{{ w.poCount }}</td>
+                <td class="td-total">{{ w.totalSpend | number:'1.2-2' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Movement Summary -->
+    @if (reportType === 'movement-summary' && movementSummary) {
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr><th>Metric</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Total Movements</td><td class="td-total">{{ movementSummary.totalMovements }}</td></tr>
+            <tr><td>Stock In (GRN)</td><td class="td-in">{{ movementSummary.totalStockIn }}</td></tr>
+            <tr><td>Stock Out (Issue)</td><td class="td-out">{{ movementSummary.totalStockOut }}</td></tr>
+            <tr><td>Transfers</td><td>{{ movementSummary.totalTransfers }}</td></tr>
+            <tr><td>Adjustments</td><td>{{ movementSummary.totalAdjustments }}</td></tr>
+          </tbody>
+        </table>
+        <p class="period-label">Period: {{ movementSummary.startDate }} → {{ movementSummary.endDate }}</p>
+      </div>
+    }
+
+  }
+
+</div>

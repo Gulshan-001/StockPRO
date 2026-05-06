@@ -1,0 +1,327 @@
+<div class="analytics-shell">
+
+  <!-- ─── Header ─────────────────────────────────────────────────────────── -->
+  <header class="analytics-header">
+    <div class="header-left">
+      <div class="header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.5V19a1 1 0 001 1h4V14H3zM9 4v16h4V4H9zM15 9v11h4a1 1 0 001-1v-10l-5 0z"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="header-title">Analytics &amp; Reporting</h1>
+        <p class="header-subtitle">Inventory intelligence dashboard — real-time business insights</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="btn-snapshot" class="btn-snapshot" (click)="takeSnapshot()" [disabled]="snapshotLoading">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+        {{ snapshotLoading ? 'Creating...' : 'Take Snapshot' }}
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── Snapshot feedback ─────────────────────────────────────────────── -->
+  @if (snapshotMessage) {
+    <div class="snapshot-toast" [class.success]="snapshotMessage.startsWith('✓')">
+      {{ snapshotMessage }}
+    </div>
+  }
+
+  <!-- ─── Filters ───────────────────────────────────────────────────────── -->
+  <section class="filter-bar">
+    <div class="filter-group">
+      <label for="startDate">From</label>
+      <input id="startDate" type="date" [(ngModel)]="startDate" class="filter-input" />
+    </div>
+    <div class="filter-group">
+      <label for="endDate">To</label>
+      <input id="endDate" type="date" [(ngModel)]="endDate" class="filter-input" />
+    </div>
+    <button id="btn-apply-filter" class="btn-apply" (click)="applyFilters()">Apply</button>
+  </section>
+
+  <!-- ─── Loading State ─────────────────────────────────────────────────── -->
+  @if (loading) {
+    <div class="loading-grid">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="kpi-skeleton"></div>
+      }
+    </div>
+  }
+
+  @if (!loading) {
+
+    <!-- ─── KPI Cards ──────────────────────────────────────────────────── -->
+    <section class="kpi-grid">
+
+      <!-- Total Stock Value -->
+      <div class="kpi-card kpi-value">
+        <div class="kpi-icon-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-label">Total Stock Value</span>
+          @if (inventoryValue) {
+            <span class="kpi-value-number">
+              {{ inventoryValue.totalStockValue | number:'1.2-2' }}
+            </span>
+            <span class="kpi-sub">{{ inventoryValue.totalProducts }} products · {{ inventoryValue.totalWarehouses }} warehouses</span>
+          } @else {
+            <span class="kpi-value-number">—</span>
+          }
+        </div>
+        <div class="kpi-badge kpi-badge-blue">LIVE</div>
+      </div>
+
+      <!-- Inventory Turnover -->
+      <div class="kpi-card kpi-turnover">
+        <div class="kpi-icon-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-label">Inventory Turnover</span>
+          @if (turnover) {
+            <span class="kpi-value-number">{{ turnover.turnoverRate | number:'1.2-2' }}x</span>
+            <span class="kpi-sub">COGS: {{ turnover.costOfGoodsSold | number:'1.0-0' }}</span>
+          } @else {
+            <span class="kpi-value-number">—</span>
+          }
+        </div>
+        <div class="kpi-badge kpi-badge-purple">30D</div>
+      </div>
+
+      <!-- Dead Stock -->
+      <div class="kpi-card kpi-dead" [class.kpi-alert]="deadStockCount > 0">
+        <div class="kpi-icon-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-label">Dead Stock Products</span>
+          <span class="kpi-value-number">{{ deadStockCount }}</span>
+          <span class="kpi-sub">No movement for 90+ days</span>
+        </div>
+        @if (deadStockCount > 0) {
+          <div class="kpi-badge kpi-badge-red">ACTION</div>
+        }
+      </div>
+
+      <!-- Low Stock -->
+      <div class="kpi-card kpi-low" [class.kpi-alert]="lowStockCount > 0">
+        <div class="kpi-icon-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-label">Low Stock Alerts</span>
+          <span class="kpi-value-number">{{ lowStockCount }}</span>
+          <span class="kpi-sub">Below reorder level</span>
+        </div>
+        @if (lowStockCount > 0) {
+          <div class="kpi-badge kpi-badge-orange">REORDER</div>
+        }
+      </div>
+
+    </section>
+
+    <!-- ─── Tab Navigation ─────────────────────────────────────────────── -->
+    <nav class="tab-nav">
+      <button id="tab-overview" class="tab-btn" [class.active]="activeTab === 'overview'" (click)="setTab('overview')">Overview</button>
+      <button id="tab-products" class="tab-btn" [class.active]="activeTab === 'products'" (click)="setTab('products')">Top Products</button>
+      <button id="tab-deadstock" class="tab-btn" [class.active]="activeTab === 'deadstock'" (click)="setTab('deadstock')">Dead Stock</button>
+      <button id="tab-movements" class="tab-btn" [class.active]="activeTab === 'movements'" (click)="setTab('movements')">Movements</button>
+    </nav>
+
+    <!-- ─── Tab: Overview ─────────────────────────────────────────────── -->
+    @if (activeTab === 'overview') {
+      <div class="tab-content">
+
+        <!-- Warehouse Value Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h2 class="chart-title">Stock Value by Warehouse</h2>
+            <button class="btn-view-full" (click)="viewFullReport('warehouse-value')">View Full →</button>
+          </div>
+          @if (warehouseValues.length > 0) {
+            <div class="warehouse-chart">
+              @for (w of warehouseValues; track w.warehouseId) {
+                <div class="warehouse-row">
+                  <div class="wh-name">{{ w.warehouseName || 'Warehouse' }}</div>
+                  <div class="wh-bar-wrap">
+                    <div class="wh-bar" [style.width]="getWarehousePercent(w.stockValue) + '%'">
+                      <span class="wh-percent">{{ getWarehousePercent(w.stockValue) }}%</span>
+                    </div>
+                  </div>
+                  <div class="wh-value">{{ w.stockValue | number:'1.0-0' }}</div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty-state">No warehouse data available.</div>
+          }
+        </div>
+
+        <!-- Low Stock Quick View -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h2 class="chart-title">Low Stock Items</h2>
+            <button class="btn-view-full" (click)="viewFullReport('low-stock')">View All →</button>
+          </div>
+          @if (lowStockItems.length > 0) {
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Current Stock</th>
+                  <th>Reorder Level</th>
+                  <th>Shortfall</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of lowStockItems; track item.productId) {
+                  <tr>
+                    <td class="td-name">{{ item.productName }}</td>
+                    <td class="td-mono">{{ item.sku }}</td>
+                    <td><span class="badge-critical">{{ item.currentStock }}</span></td>
+                    <td>{{ item.reorderLevel }}</td>
+                    <td class="td-shortfall">-{{ item.shortfallUnits }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <div class="empty-state success-state">✓ All products are above reorder levels.</div>
+          }
+        </div>
+
+      </div>
+    }
+
+    <!-- ─── Tab: Top Products ─────────────────────────────────────────── -->
+    @if (activeTab === 'products') {
+      <div class="tab-content">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h2 class="chart-title">Top Moving Products</h2>
+            <button class="btn-view-full" (click)="viewFullReport('top-products')">View Full Report →</button>
+          </div>
+          @if (topProducts.length > 0) {
+            <div class="top-products-chart">
+              @for (product of topProducts; track product.productId) {
+                <div class="product-bar-row">
+                  <div class="product-rank">#{{ product.rank }}</div>
+                  <div class="product-info">
+                    <span class="product-name">{{ product.productName }}</span>
+                    <span class="product-sku">{{ product.sku }}</span>
+                  </div>
+                  <div class="product-bar-container">
+                    <div class="product-bar product-bar-in"
+                         [style.width]="getBarWidth(product)"
+                         title="Total moved: {{ product.totalUnitsMoved }}">
+                    </div>
+                  </div>
+                  <div class="product-stats">
+                    <span class="stat-in">▲ {{ product.totalUnitsIn }}</span>
+                    <span class="stat-out">▼ {{ product.totalUnitsOut }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty-state">No movement data for this period.</div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- ─── Tab: Dead Stock ────────────────────────────────────────────── -->
+    @if (activeTab === 'deadstock') {
+      <div class="tab-content">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h2 class="chart-title">Dead Stock Report <span class="chart-subtitle">— No movement for 90+ days</span></h2>
+            <button class="btn-view-full" (click)="viewFullReport('dead-stock')">Full Report →</button>
+          </div>
+          @if (deadStockItems.length > 0) {
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Stock</th>
+                  <th>Value</th>
+                  <th>Last Movement</th>
+                  <th>Days Idle</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of deadStockItems; track item.productId) {
+                  <tr class="dead-row">
+                    <td class="td-name">{{ item.productName }}</td>
+                    <td class="td-mono">{{ item.sku }}</td>
+                    <td>{{ item.currentStock }}</td>
+                    <td>{{ item.stockValue | number:'1.2-2' }}</td>
+                    <td>{{ item.lastMovementDate ? (item.lastMovementDate | date:'dd MMM yyyy') : 'Never' }}</td>
+                    <td><span class="badge-dead">{{ item.daysSinceLastMovement }}d</span></td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <div class="empty-state success-state">✓ No dead stock detected. All products have recent movement.</div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- ─── Tab: Movements ────────────────────────────────────────────── -->
+    @if (activeTab === 'movements') {
+      <div class="tab-content">
+        @if (movementSummary) {
+          <div class="movement-summary-grid">
+            <div class="movement-card movement-total">
+              <span class="movement-label">Total Movements</span>
+              <span class="movement-number">{{ movementSummary.totalMovements }}</span>
+            </div>
+            <div class="movement-card movement-in">
+              <span class="movement-label">Stock In (GRN)</span>
+              <span class="movement-number">{{ movementSummary.totalStockIn }}</span>
+            </div>
+            <div class="movement-card movement-out">
+              <span class="movement-label">Stock Out</span>
+              <span class="movement-number">{{ movementSummary.totalStockOut }}</span>
+            </div>
+            <div class="movement-card movement-transfer">
+              <span class="movement-label">Transfers</span>
+              <span class="movement-number">{{ movementSummary.totalTransfers }}</span>
+            </div>
+            <div class="movement-card movement-adjust">
+              <span class="movement-label">Adjustments</span>
+              <span class="movement-number">{{ movementSummary.totalAdjustments }}</span>
+            </div>
+          </div>
+          <div class="chart-card mt-4">
+            <p class="period-info">
+              Period: {{ movementSummary.startDate }} → {{ movementSummary.endDate }}
+            </p>
+            <button class="btn-view-full" (click)="viewFullReport('movement-summary')">View Detailed Movement Report →</button>
+          </div>
+        } @else {
+          <div class="empty-state">No movement data for selected period.</div>
+        }
+      </div>
+    }
+
+  } <!-- end !loading -->
+
+</div>

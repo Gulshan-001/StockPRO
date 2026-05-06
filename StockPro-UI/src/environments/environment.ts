@@ -4,5 +4,7 @@ export const environment = {
   productApiUrl: 'http://localhost:5001',
   warehouseApiUrl: 'http://localhost:5002',
   movementApiUrl: 'http://localhost:5003',
-  purchaseApiUrl: 'http://localhost:5004'
+  purchaseApiUrl: 'http://localhost:5004',
+  alertApiUrl: 'http://localhost:5005',
+  analyticsApiUrl: 'http://localhost:5006'
 };

@@ -3,15 +3,21 @@ import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NotificationBellComponent } from '../alerts/components/notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationBellComponent],
   template: `
+  <!-- Notification Center Widget fixed to viewport window -->
+  <div style="position: fixed; top: 40px; right: 40px; z-index: 99999;">
+    <app-notification-bell></app-notification-bell>
+  </div>
+
   <div class="app-container bg-dashboard animate">
     
-    <div class="content-panel" style="padding: 100px 10%; justify-content: flex-start;">
+    <div class="content-panel" style="padding: 100px 10%; justify-content: flex-start; position: relative;">
 
       <h1 class="title" style="font-size: 48px;">Welcome back, {{ userName }}</h1>
       <p class="subtitle">Select a module to continue your inventory management operations.</p>

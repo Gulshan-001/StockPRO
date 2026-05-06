@@ -86,6 +86,41 @@ services:
     networks:
       - stockpro-network
 
+  alert:
+    build:
+      context: ./StockPro.Alert
+    container_name: stockpro-alert
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5005
+    ports:
+      - "5005:5005"
+    depends_on:
+      - postgres
+      - stock-movement
+      - product-item
+      - purchase
+    networks:
+      - stockpro-network
+
+  analytics:
+    build:
+      context: ./StockPro.Analytics
+    container_name: stockpro-analytics
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5006
+    ports:
+      - "5006:5006"
+    depends_on:
+      - postgres
+      - stock-movement
+      - warehouse-stock
+      - product-item
+      - purchase
+    networks:
+      - stockpro-network
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: stockpro-admin

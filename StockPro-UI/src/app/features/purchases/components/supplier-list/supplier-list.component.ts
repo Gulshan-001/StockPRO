@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } 
 import { RouterModule, Router } from '@angular/router';
 import { PurchaseService } from '../../services/purchase.service';
 import { Supplier } from '../../models/purchase.model';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-supplier-list',
@@ -24,7 +25,7 @@ import { Supplier } from '../../models/purchase.model';
               <h1 class="title" style="font-family: 'Outfit', sans-serif; font-size: 52px; letter-spacing: -0.04em; margin-bottom: 5px;">Supplier Registry</h1>
               <p class="subtitle" style="max-width: 700px; margin-bottom: 0; font-size: 15px; opacity: 0.7;">Vetted supplier network powering the procurement engine.</p>
             </div>
-            <button class="btn btn-primary" (click)="openForm()" style="white-space: nowrap; padding: 12px 28px;">+ NEW SUPPLIER</button>
+            <button *ngIf="isAdmin || isManager" class="btn btn-primary" (click)="openForm()" style="white-space: nowrap; padding: 12px 28px;">+ NEW SUPPLIER</button>
           </div>
 
           <!-- Form -->
@@ -61,7 +62,7 @@ import { Supplier } from '../../models/purchase.model';
                   <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 8%;">Lead</th>
                   <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 9%;">Rating</th>
                   <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 8%;">Status</th>
-                  <th style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 5%;"></th>
+                  <th *ngIf="isAdmin || isManager" style="padding: 16px 24px; font-size: 10px; text-transform: uppercase; color: var(--color-muted); font-weight: 700; width: 5%;"></th>
                 </tr>
               </thead>
               <tbody>
@@ -75,10 +76,10 @@ import { Supplier } from '../../models/purchase.model';
                   <td style="padding: 16px 24px;">
                     <span [style.background]="s.isActive ? 'rgba(74,222,128,0.1)' : 'rgba(248,113,113,0.1)'" [style.color]="s.isActive ? '#4ade80' : '#f87171'" style="padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 800; letter-spacing: 0.5px; border: 1px solid currentColor;">{{ s.isActive ? 'ACTIVE' : 'INACTIVE' }}</span>
                   </td>
-                  <td style="padding: 16px 24px;"><button (click)="editSupplier(s)" class="btn btn-ghost" style="padding: 4px 14px; font-size: 10px;">EDIT</button></td>
+                  <td *ngIf="isAdmin || isManager" style="padding: 16px 24px;"><button (click)="editSupplier(s)" class="btn btn-ghost" style="padding: 4px 14px; font-size: 10px;">EDIT</button></td>
                 </tr>
                 <tr *ngIf="suppliers.length === 0">
-                  <td colspan="8" style="text-align: center; padding: 100px; color: var(--color-muted); font-style: italic; font-size: 13px; letter-spacing: 2px; opacity: 0.5;">NO SUPPLIERS REGISTERED YET</td>
+                  <td [attr.colspan]="(isAdmin || isManager) ? 8 : 7" style="text-align: center; padding: 100px; color: var(--color-muted); font-style: italic; font-size: 13px; letter-spacing: 2px; opacity: 0.5;">NO SUPPLIERS REGISTERED YET</td>
                 </tr>
               </tbody>
             </table>
@@ -97,7 +98,10 @@ export class SupplierListComponent implements OnInit {
   errorMsg = '';
   supplierForm: FormGroup;
 
-  constructor(private purchaseService: PurchaseService, public router: Router, private fb: FormBuilder) {
+  get isAdmin(): boolean { return this.authService.currentUser?.role?.toUpperCase() === 'ADMIN'; }
+  get isManager(): boolean { return this.authService.currentUser?.role?.toUpperCase() === 'INVENTORY MANAGER'; }
+
+  constructor(private purchaseService: PurchaseService, public router: Router, private fb: FormBuilder, private authService: AuthService) {
     this.supplierForm = this.fb.group({
       name: ['', Validators.required],
       contactPerson: [''],
