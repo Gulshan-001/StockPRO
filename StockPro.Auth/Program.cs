@@ -13,11 +13,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ─── Database Configuration ──────────────────────────────────────────
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
-if (builder.Environment.IsProduction() && 
-    !connectionString.Contains("SSL Mode") && 
-    !connectionString.Contains("sslmode") &&
-    !connectionString.StartsWith("postgres://") && 
-    !connectionString.StartsWith("postgresql://"))
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+if (!string.IsNullOrEmpty(databaseUrl) && (databaseUrl.StartsWith("postgres") || databaseUrl.StartsWith("postgresql")))
+{
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':');
+    var user = userInfo[0];
+    var pass = userInfo.Length > 1 ? userInfo[1] : "";
+    var host = uri.Host;
+    var port = uri.Port == -1 ? 5432 : uri.Port;
+    var database = uri.AbsolutePath.TrimStart('/');
+    
+    connectionString = $"Host={host};Port={port};Database={database};Username={user};Password={pass};SSL Mode=Require;Trust Server Certificate=true";
+}
+else if (builder.Environment.IsProduction() && !connectionString.Contains("SSL Mode"))
 {
     connectionString += ";SSL Mode=Require;Trust Server Certificate=true";
 }

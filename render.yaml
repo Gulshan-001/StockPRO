@@ -16,10 +16,10 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:5000
-      - key: ConnectionStrings__DefaultConnection
+      - key: DATABASE_URL
         fromDatabase:
           name: stockpro-db
-          property: connectionString
+          property: url
 
   # ─── Product Item Service ──────────────────────────────────────────────────
   - type: web
@@ -33,10 +33,10 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:5000
-      - key: ConnectionStrings__DefaultConnection
+      - key: DATABASE_URL
         fromDatabase:
           name: stockpro-db
-          property: connectionString
+          property: url
 
   # ─── Warehouse Stock Service ───────────────────────────────────────────────
   - type: web
@@ -50,10 +50,10 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:5000
-      - key: ConnectionStrings__DefaultConnection
+      - key: DATABASE_URL
         fromDatabase:
           name: stockpro-db
-          property: connectionString
+          property: url
 
   # ─── Stock Movement Service ───────────────────────────────────────────────
   - type: web
@@ -67,10 +67,10 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:5000
-      - key: ConnectionStrings__DefaultConnection
+      - key: DATABASE_URL
         fromDatabase:
           name: stockpro-db
-          property: connectionString
+          property: url
 
   # ─── Purchase Service ──────────────────────────────────────────────────────
   - type: web
@@ -86,10 +86,10 @@ services:
         value: http://+:5000
       - key: MovementServiceUrl
         value: http://stockpro-movement:5000
-      - key: ConnectionStrings__DefaultConnection
+      - key: DATABASE_URL
         fromDatabase:
           name: stockpro-db
-          property: connectionString
+          property: url
 
   # ─── Alert Service ──────────────────────────────────────────────────────────
   - type: web
@@ -109,10 +109,10 @@ services:
         value: http://stockpro-product:5000
       - key: ServiceUrls__Purchase
         value: http://stockpro-purchase:5000
-      - key: ConnectionStrings__DefaultConnection
+      - key: DATABASE_URL
         fromDatabase:
           name: stockpro-db
-          property: connectionString
+          property: url
 
   # ─── Analytics Service ──────────────────────────────────────────────────────
   - type: web
@@ -130,10 +130,10 @@ services:
         value: http://stockpro-warehouse:5000
       - key: MovementServiceUrl
         value: http://stockpro-movement:5000
-      - key: ConnectionStrings__DefaultConnection
+      - key: DATABASE_URL
         fromDatabase:
           name: stockpro-db
-          property: connectionString
+          property: url
 
   # ─── Frontend (Angular) ────────────────────────────────────────────────────
   - type: web
