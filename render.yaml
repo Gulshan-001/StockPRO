@@ -1,11 +1,10 @@
-services:
-  # ─── Database ──────────────────────────────────────────────────────────────
-  - type: database
-    name: stockpro-db
+databases:
+  - name: stockpro-db
     databaseName: stockpro
     user: postgres
     plan: free
 
+services:
   # ─── Auth Service ──────────────────────────────────────────────────────────
   - type: web
     name: stockpro-auth
