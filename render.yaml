@@ -1,7 +1,6 @@
 databases:
   - name: stockpro-db
     databaseName: stockpro
-    user: postgres
     plan: free
 
 services:
