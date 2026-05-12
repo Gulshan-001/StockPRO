@@ -10,7 +10,6 @@ services:
     env: docker
     dockerContext: ./StockPro.Auth
     dockerfilePath: Dockerfile
-    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -28,7 +27,6 @@ services:
     env: docker
     dockerContext: ./StockPro.ProductItem
     dockerfilePath: Dockerfile
-    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -46,7 +44,6 @@ services:
     env: docker
     dockerContext: ./StockPro.WarehouseStock
     dockerfilePath: Dockerfile
-    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -64,7 +61,6 @@ services:
     env: docker
     dockerContext: ./StockPro.StockMovement
     dockerfilePath: Dockerfile
-    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -82,7 +78,6 @@ services:
     env: docker
     dockerContext: ./StockPro.Purchase
     dockerfilePath: Dockerfile
-    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -102,7 +97,6 @@ services:
     env: docker
     dockerContext: ./StockPro.Alert
     dockerfilePath: Dockerfile
-    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -126,7 +120,6 @@ services:
     env: docker
     dockerContext: ./StockPro.Analytics
     dockerfilePath: Dockerfile
-    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
