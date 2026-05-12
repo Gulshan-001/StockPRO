@@ -8,8 +8,9 @@ services:
   - type: web
     name: stockpro-auth
     env: docker
-    dockerContext: .
-    dockerfilePath: StockPro.Auth/Dockerfile
+    dockerContext: ./StockPro.Auth
+    dockerfilePath: Dockerfile
+    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -25,8 +26,9 @@ services:
   - type: web
     name: stockpro-product
     env: docker
-    dockerContext: .
-    dockerfilePath: StockPro.ProductItem/Dockerfile
+    dockerContext: ./StockPro.ProductItem
+    dockerfilePath: Dockerfile
+    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -42,8 +44,9 @@ services:
   - type: web
     name: stockpro-warehouse
     env: docker
-    dockerContext: .
-    dockerfilePath: StockPro.WarehouseStock/Dockerfile
+    dockerContext: ./StockPro.WarehouseStock
+    dockerfilePath: Dockerfile
+    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -59,8 +62,9 @@ services:
   - type: web
     name: stockpro-movement
     env: docker
-    dockerContext: .
-    dockerfilePath: StockPro.StockMovement/Dockerfile
+    dockerContext: ./StockPro.StockMovement
+    dockerfilePath: Dockerfile
+    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -76,8 +80,9 @@ services:
   - type: web
     name: stockpro-purchase
     env: docker
-    dockerContext: .
-    dockerfilePath: StockPro.Purchase/Dockerfile
+    dockerContext: ./StockPro.Purchase
+    dockerfilePath: Dockerfile
+    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -95,8 +100,9 @@ services:
   - type: web
     name: stockpro-alert
     env: docker
-    dockerContext: .
-    dockerfilePath: StockPro.Alert/Dockerfile
+    dockerContext: ./StockPro.Alert
+    dockerfilePath: Dockerfile
+    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -118,8 +124,9 @@ services:
   - type: web
     name: stockpro-analytics
     env: docker
-    dockerContext: .
-    dockerfilePath: StockPro.Analytics/Dockerfile
+    dockerContext: ./StockPro.Analytics
+    dockerfilePath: Dockerfile
+    port: 5000
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
