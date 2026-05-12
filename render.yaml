@@ -139,7 +139,6 @@ services:
   - type: web
     name: stockpro-ui
     env: static
-    plan: free
     buildCommand: "cd StockPro-UI && npm install && npm run build"
     staticPublishPath: "StockPro-UI/dist/stock-pro-ui/browser"
     envVars:
