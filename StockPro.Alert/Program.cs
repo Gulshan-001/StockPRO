@@ -10,7 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ─── Database Configuration ──────────────────────────────────────────
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
-if (builder.Environment.IsProduction() && !connectionString.Contains("SSL Mode"))
+if (builder.Environment.IsProduction() && 
+    !connectionString.Contains("SSL Mode") && 
+    !connectionString.Contains("sslmode") &&
+    !connectionString.StartsWith("postgres://") && 
+    !connectionString.StartsWith("postgresql://"))
 {
     connectionString += ";SSL Mode=Require;Trust Server Certificate=true";
 }
