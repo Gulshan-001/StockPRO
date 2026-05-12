@@ -15,7 +15,11 @@ const vars = [
 ];
 
 vars.forEach(v => {
-  const value = process.env[v] || 'http://localhost:5000'; // Fallback for local testing if needed
+  let value = process.env[v] || 'http://localhost:5000';
+  // Prepend https:// if it's a production URL (onrender.com) and missing protocol
+  if (value.includes('onrender.com') && !value.startsWith('http')) {
+    value = `https://${value}`;
+  }
   envContent = envContent.replace(`\${${v}}`, value);
 });
 

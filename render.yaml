@@ -137,7 +137,7 @@ services:
           property: connectionString
 
   # ─── Frontend (Angular) ────────────────────────────────────────────────────
-  - type: static
+  - type: static_site
     name: stockpro-ui
     env: node
     plan: free
@@ -145,16 +145,37 @@ services:
     staticPublishPath: "StockPro-UI/dist/stock-pro-ui/browser"
     envVars:
       - key: AUTH_API_URL
-        value: https://stockpro-auth.onrender.com
+        fromService:
+          type: web
+          name: stockpro-auth
+          property: host
       - key: PRODUCT_API_URL
-        value: https://stockpro-product.onrender.com
+        fromService:
+          type: web
+          name: stockpro-product
+          property: host
       - key: WAREHOUSE_API_URL
-        value: https://stockpro-warehouse.onrender.com
+        fromService:
+          type: web
+          name: stockpro-warehouse
+          property: host
       - key: MOVEMENT_API_URL
-        value: https://stockpro-movement.onrender.com
+        fromService:
+          type: web
+          name: stockpro-movement
+          property: host
       - key: PURCHASE_API_URL
-        value: https://stockpro-purchase.onrender.com
+        fromService:
+          type: web
+          name: stockpro-purchase
+          property: host
       - key: ALERT_API_URL
-        value: https://stockpro-alert.onrender.com
+        fromService:
+          type: web
+          name: stockpro-alert
+          property: host
       - key: ANALYTICS_API_URL
-        value: https://stockpro-analytics.onrender.com
+        fromService:
+          type: web
+          name: stockpro-analytics
+          property: host
