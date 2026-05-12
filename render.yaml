@@ -16,7 +16,7 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:5000
-      - key: DATABASE_URL
+      - key: ConnectionStrings__DefaultConnection
         fromDatabase:
           name: stockpro-db
           property: connectionString
@@ -33,7 +33,7 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:5000
-      - key: DATABASE_URL
+      - key: ConnectionStrings__DefaultConnection
         fromDatabase:
           name: stockpro-db
           property: connectionString
@@ -50,7 +50,7 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:5000
-      - key: DATABASE_URL
+      - key: ConnectionStrings__DefaultConnection
         fromDatabase:
           name: stockpro-db
           property: connectionString
@@ -67,7 +67,7 @@ services:
         value: Production
       - key: ASPNETCORE_URLS
         value: http://+:5000
-      - key: DATABASE_URL
+      - key: ConnectionStrings__DefaultConnection
         fromDatabase:
           name: stockpro-db
           property: connectionString
@@ -86,7 +86,7 @@ services:
         value: http://+:5000
       - key: MovementServiceUrl
         value: http://stockpro-movement:5000
-      - key: DATABASE_URL
+      - key: ConnectionStrings__DefaultConnection
         fromDatabase:
           name: stockpro-db
           property: connectionString
@@ -109,7 +109,7 @@ services:
         value: http://stockpro-product:5000
       - key: ServiceUrls__Purchase
         value: http://stockpro-purchase:5000
-      - key: DATABASE_URL
+      - key: ConnectionStrings__DefaultConnection
         fromDatabase:
           name: stockpro-db
           property: connectionString
@@ -130,7 +130,7 @@ services:
         value: http://stockpro-warehouse:5000
       - key: MovementServiceUrl
         value: http://stockpro-movement:5000
-      - key: DATABASE_URL
+      - key: ConnectionStrings__DefaultConnection
         fromDatabase:
           name: stockpro-db
           property: connectionString

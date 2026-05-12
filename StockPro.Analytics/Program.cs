@@ -9,15 +9,10 @@ using StockPro.Analytics.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // ─── Database Configuration ──────────────────────────────────────────
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-// Support Render's DATABASE_URL if present
-var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-if (!string.IsNullOrEmpty(databaseUrl))
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+if (builder.Environment.IsProduction() && !connectionString.Contains("SSL Mode"))
 {
-    var uri = new Uri(databaseUrl);
-    var userInfo = uri.UserInfo.Split(':');
-    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+    connectionString += ";SSL Mode=Require;Trust Server Certificate=true";
 }
 
 builder.Services.AddDbContext<AnalyticsDbContext>(options =>
