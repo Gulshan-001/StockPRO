@@ -11,9 +11,20 @@ using StockPro.Auth.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ─── Database: PostgreSQL ───────────────────────────────────────────
+// ─── Database Configuration ──────────────────────────────────────────
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Support Render's DATABASE_URL if present
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+    var uri = new Uri(databaseUrl);
+    var userInfo = uri.UserInfo.Split(':');
+    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+}
+
 builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 // ─── Identity ───────────────────────────────────────────────────────
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -66,7 +77,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.SetIsOriginAllowed(_ => true) // Allow any origin for Render deployment
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
