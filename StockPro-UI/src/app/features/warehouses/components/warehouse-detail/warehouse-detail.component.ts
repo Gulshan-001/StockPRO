@@ -8,6 +8,7 @@ import { ProductService } from '../../../products/services/product.service';
 import { Product } from '../../../products/models/product.model';
 import { switchMap } from 'rxjs/operators';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-warehouse-detail',
@@ -31,8 +32,8 @@ import { forkJoin } from 'rxjs';
             </div>
           </div>
           <div class="header-actions">
-            <button class="btn btn-ghost">Edit Location</button>
-            <button class="btn btn-primary">+ Add Stock</button>
+            <button *ngIf="canManage" class="btn btn-ghost" [routerLink]="['/warehouses', warehouse.warehouseId, 'edit']">Edit Location</button>
+            <button class="btn btn-primary" routerLink="/movements/new" [queryParams]="{ warehouseId: warehouse.warehouseId }">+ Add Stock</button>
           </div>
         </header>
 
@@ -151,8 +152,14 @@ export class WarehouseDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private warehouseService: WarehouseService,
-    private productService: ProductService
+    private productService: ProductService,
+    private authService: AuthService
   ) {}
+
+  get canManage(): boolean {
+    const role = this.authService.userRole.toUpperCase();
+    return role === 'ADMIN' || role === 'INVENTORY MANAGER' || role === 'MANAGER';
+  }
 
   ngOnInit(): void {
     this.route.params.pipe(

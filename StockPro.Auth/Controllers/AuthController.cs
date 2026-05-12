@@ -172,7 +172,7 @@ public class AuthController : ControllerBase
 
     // GET /api/auth/users — Admin only
     [HttpGet("users")]
-    [Authorize(Roles = "ADMIN")]
+    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER")]
     public async Task<IActionResult> GetAllUsers()
     {
         var users = _userManager.Users.ToList();

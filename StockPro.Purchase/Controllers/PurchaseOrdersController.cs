@@ -48,7 +48,7 @@ public class PurchaseOrdersController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "ADMIN,INVENTORY MANAGER")]
+    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
     public async Task<IActionResult> Create([FromBody] CreatePODto dto)
     {
         try
@@ -67,7 +67,7 @@ public class PurchaseOrdersController : ControllerBase
     }
 
     [HttpPut("{id:guid}/submit")]
-    [Authorize(Roles = "ADMIN,INVENTORY MANAGER")]
+    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
     public async Task<IActionResult> Submit(Guid id)
     {
         try
@@ -86,7 +86,7 @@ public class PurchaseOrdersController : ControllerBase
     }
 
     [HttpPut("approve")]
-    [Authorize(Roles = "ADMIN,INVENTORY MANAGER")]
+    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
     public async Task<IActionResult> Approve([FromBody] ApprovePODto dto)
     {
         try
@@ -105,7 +105,7 @@ public class PurchaseOrdersController : ControllerBase
     }
 
     [HttpPut("reject")]
-    [Authorize(Roles = "ADMIN,INVENTORY MANAGER")]
+    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
     public async Task<IActionResult> Reject([FromBody] RejectPODto dto)
     {
         try
@@ -124,7 +124,7 @@ public class PurchaseOrdersController : ControllerBase
     }
 
     [HttpPost("receive")]
-    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,WAREHOUSE STAFF")]
+    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
     public async Task<IActionResult> Receive([FromBody] ReceiveGoodsDto dto)
     {
         try

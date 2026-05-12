@@ -35,7 +35,7 @@ namespace StockPro.WarehouseStock.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> Create([FromBody] WarehouseCreateDto dto)
         {
             var warehouse = await _warehouseService.CreateWarehouseAsync(dto);
@@ -43,7 +43,7 @@ namespace StockPro.WarehouseStock.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> Update(Guid id, [FromBody] WarehouseUpdateDto dto)
         {
             var warehouse = await _warehouseService.UpdateWarehouseAsync(id, dto);
@@ -52,7 +52,7 @@ namespace StockPro.WarehouseStock.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

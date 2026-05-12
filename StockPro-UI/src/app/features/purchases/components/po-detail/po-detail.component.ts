@@ -150,8 +150,8 @@ export class PODetailComponent implements OnInit {
   rejecting = false;
   receiving = false;
 
-  get canManage(): boolean { return ['ADMIN', 'INVENTORY MANAGER'].includes(this.authService.userRole); }
-  get canReceive(): boolean { return ['ADMIN', 'INVENTORY MANAGER', 'WAREHOUSE STAFF'].includes(this.authService.userRole); }
+  get canManage(): boolean { return ['ADMIN', 'INVENTORY MANAGER', 'MANAGER'].includes(this.authService.userRole); }
+  get canReceive(): boolean { return ['ADMIN', 'INVENTORY MANAGER', 'MANAGER', 'STAFF'].includes(this.authService.userRole); }
   get showApproveActions(): boolean { return this.canManage && this.po?.status === 'PENDING'; }
 
   constructor(

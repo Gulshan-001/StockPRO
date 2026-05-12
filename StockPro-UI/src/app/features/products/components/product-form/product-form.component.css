@@ -103,6 +103,12 @@
     background: rgba(255, 255, 255, 0.08);
 }
 
+.spec-input.input-invalid {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.05) !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+}
+
 .spec-input.mono {
     font-family: 'JetBrains Mono', 'Courier New', monospace;
 }

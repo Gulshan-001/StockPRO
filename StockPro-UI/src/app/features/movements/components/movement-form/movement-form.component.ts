@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { MovementService } from '../../services/movement.service';
 import { ProductService } from '../../../products/services/product.service';
 import { WarehouseService } from '../../../warehouses/services/warehouse.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Product } from '../../../products/models/product.model';
 import { Warehouse } from '../../../warehouses/models/warehouse.model';
 
@@ -126,7 +126,8 @@ export class MovementFormComponent implements OnInit {
     private movementService: MovementService,
     private productService: ProductService,
     private warehouseService: WarehouseService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.movementForm = this.fb.group({
       type: ['STOCK_IN', Validators.required],
@@ -142,7 +143,14 @@ export class MovementFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.productService.getAllProducts().subscribe((p: Product[]) => this.products = p);
-    this.warehouseService.getAllWarehouses().subscribe((w: Warehouse[]) => this.warehouses = w);
+    this.warehouseService.getAllWarehouses().subscribe((w: Warehouse[]) => {
+      this.warehouses = w;
+      // Pre-select if passed via query params
+      const warehouseId = this.route.snapshot.queryParamMap.get('warehouseId');
+      if (warehouseId) {
+        this.movementForm.patchValue({ warehouseId });
+      }
+    });
 
     // Watch type changes to adjust validators
     this.movementForm.get('type')?.valueChanges.subscribe(type => {

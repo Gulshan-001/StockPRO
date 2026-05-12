@@ -147,6 +147,7 @@ public class AlertMonitorService : BackgroundService
 
             var httpFactory = scope.ServiceProvider.GetRequiredService<IHttpClientFactory>();
             var http = httpFactory.CreateClient("Internal");
+            http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", GenerateSystemToken());
 
             var stockJson = await http.GetStringAsync($"{movementUrl}/api/stock");
             var stockLevels = JsonSerializer.Deserialize<List<StockLevelDto>>(stockJson,

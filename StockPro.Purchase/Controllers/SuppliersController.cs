@@ -41,7 +41,7 @@ public class SuppliersController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "ADMIN,INVENTORY MANAGER")]
+    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
     public async Task<IActionResult> Create([FromBody] CreateSupplierDto dto)
     {
         try
@@ -56,7 +56,7 @@ public class SuppliersController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "ADMIN,INVENTORY MANAGER")]
+    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSupplierDto dto)
     {
         try

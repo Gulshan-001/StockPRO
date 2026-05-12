@@ -16,6 +16,21 @@ namespace StockPro.StockMovement.Controllers
         private readonly IMovementService _movementService;
         private readonly ILogger<MovementController> _logger;
 
+        [HttpGet("debug-auth")]
+        [AllowAnonymous]
+        public IActionResult DebugAuth()
+        {
+            var claims = User.Claims.Select(c => new { c.Type, c.Value });
+            var identity = User.Identity;
+            return Ok(new
+            {
+                IsAuthenticated = identity?.IsAuthenticated,
+                Name = identity?.Name,
+                Claims = claims,
+                Roles = User.Claims.Where(c => c.Type == ClaimTypes.Role || c.Type == "role").Select(c => c.Value)
+            });
+        }
+
         public MovementController(IMovementService movementService, ILogger<MovementController> logger)
         {
             _movementService = movementService;
@@ -24,14 +39,16 @@ namespace StockPro.StockMovement.Controllers
 
         private Guid GetUserId()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value 
+                          ?? User.FindFirst("sub")?.Value;
+            
             if (Guid.TryParse(userIdClaim, out var userId)) return userId;
             return Guid.Empty;
         }
 
         [HttpPost("stock-in")]
         [HttpPost("stock_in")]
-        [Authorize(Roles = "WAREHOUSE STAFF,INVENTORY MANAGER,ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> StockIn([FromBody] StockInRequestDto request)
         {
             try
@@ -41,13 +58,14 @@ namespace StockPro.StockMovement.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                var msg = ex.InnerException?.Message ?? ex.Message;
+                return BadRequest(new { message = msg });
             }
         }
 
         [HttpPost("stock-out")]
         [HttpPost("stock_out")]
-        [Authorize(Roles = "WAREHOUSE STAFF,INVENTORY MANAGER,ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> StockOut([FromBody] StockOutRequestDto request)
         {
             try
@@ -57,13 +75,14 @@ namespace StockPro.StockMovement.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                var msg = ex.InnerException?.Message ?? ex.Message;
+                return BadRequest(new { message = msg });
             }
         }
 
         [HttpPost("transfer")]
         [HttpPost("transfer_stock")]
-        [Authorize(Roles = "WAREHOUSE STAFF,INVENTORY MANAGER,ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> Transfer([FromBody] StockTransferRequestDto request)
         {
             try
@@ -73,12 +92,13 @@ namespace StockPro.StockMovement.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                var msg = ex.InnerException?.Message ?? ex.Message;
+                return BadRequest(new { message = msg });
             }
         }
 
         [HttpPost("adjustment")]
-        [Authorize(Roles = "INVENTORY MANAGER,ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> Adjustment([FromBody] StockAdjustmentRequestDto request)
         {
             try
@@ -88,18 +108,19 @@ namespace StockPro.StockMovement.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                var msg = ex.InnerException?.Message ?? ex.Message;
+                return BadRequest(new { message = msg });
             }
         }
 
         [HttpGet("history")]
-        [Authorize(Roles = "INVENTORY MANAGER,ADMIN,WAREHOUSE STAFF")]
-        public async Task<IActionResult> GetHistory([FromQuery] Guid? productId, [FromQuery] Guid? warehouseId, [FromQuery] string? type)
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
+        public async Task<IActionResult> GetHistory([FromQuery] Guid? productId, [FromQuery] Guid? warehouseId, [FromQuery] string? type, [FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
         {
-            _logger.LogInformation($"GetHistory called. productId: {productId}, warehouseId: {warehouseId}, type: {type}");
+            _logger.LogInformation($"GetHistory called. productId: {productId}, warehouseId: {warehouseId}, type: {type}, start: {startDate}, end: {endDate}");
             try
             {
-                var history = await _movementService.GetHistoryAsync(productId, warehouseId, type);
+                var history = await _movementService.GetHistoryAsync(productId, warehouseId, type, startDate, endDate);
                 _logger.LogInformation($"GetHistory returning {history.Count()} items");
                 return Ok(history);
             }

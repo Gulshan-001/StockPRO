@@ -152,7 +152,7 @@ public class MovementDto
     public Guid WarehouseId { get; set; }
     public string MovementType { get; set; } = string.Empty;
     public int Quantity { get; set; }
-    public decimal UnitCost { get; set; }
+    public decimal? UnitCost { get; set; }
     public DateTime MovementDate { get; set; }
 }
 

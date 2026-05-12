@@ -181,6 +181,14 @@ select.input option {
 }
 .btn-primary { background: #fff; color: #000; }
 .btn-primary:hover { background: rgba(255,255,255,0.9); transform: translateY(-2px); }
+.btn:disabled { 
+  opacity: 0.5; 
+  cursor: not-allowed; 
+  transform: none !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
+  border-color: transparent !important;
+}
 
 .btn-outline { 
   background: rgba(255, 255, 255, 0.05); 

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from './core/services/auth.service';
+import { AlertService } from './features/alerts/services/alert.service';
 
 @Component({
   selector: 'app-root',
@@ -7,25 +9,27 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'StockPro-UI';
-  isLoggedIn = false;
+  showNav = false;
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private alertService: AlertService) {}
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn;
+  }
 
   ngOnInit() {
-    // Basic check for UI state
-    this.isLoggedIn = !!localStorage.getItem('token');
-    
-    // Listen for storage changes
-    window.addEventListener('storage', () => {
-      this.isLoggedIn = !!localStorage.getItem('token');
+    if (this.isLoggedIn) {
+      this.alertService.registerRecipient().subscribe();
+    }
+
+    this.router.events.subscribe(() => {
+      const url = this.router.url;
+      // Hide nav if on dashboard or login pages
+      this.showNav = !url.includes('dashboard') && !url.includes('auth') && url !== '/';
     });
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    this.isLoggedIn = false;
-    this.router.navigate(['/auth/login']);
+    this.authService.logout();
   }
 }

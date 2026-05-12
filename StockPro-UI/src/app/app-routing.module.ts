@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/auth.guard';
+import { AuthGuard, RoleGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
@@ -33,15 +33,21 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./features/purchases/purchases.routes').then(r => r.PURCHASE_ROUTES)
   },
-  /* {
+  {
     path: 'alerts',
     canActivate: [AuthGuard],
     loadChildren: () => import('./features/alerts/alerts.routes').then(r => r.ALERT_ROUTES)
-  }, */
+  },
   {
     path: 'reports',
     canActivate: [AuthGuard],
     loadChildren: () => import('./features/reports/reports.routes').then(r => r.REPORT_ROUTES)
+  },
+  {
+    path: 'admin',
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['ADMIN'] },
+    loadChildren: () => import('./features/admin/admin.routes').then(r => r.ADMIN_ROUTES)
   },
   { path: 'unauthorized', redirectTo: 'auth/login' },
   { path: '**', redirectTo: 'auth/login' }

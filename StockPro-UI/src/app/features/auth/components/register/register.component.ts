@@ -41,7 +41,7 @@ import { AuthService } from '../../../../core/services/auth.service';
       <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); padding: 16px; border-radius: 12px; margin-top: 24px;">
         <p style="font-size: 11px; line-height: 1.5; color: var(--color-muted); margin: 0;">
           <strong style="color: #fff; display: block; margin-bottom: 4px;">Security Notice:</strong>
-          All new accounts are initialized with <span style="color: #fff; font-weight: 600;">Warehouse Staff</span> clearance. High-level access must be authorized by an Administrator.
+          All new accounts are initialized with <span style="color: #fff; font-weight: 600;">Staff</span> clearance. High-level access must be authorized by an Administrator.
         </p>
       </div>
 

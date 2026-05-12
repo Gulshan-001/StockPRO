@@ -11,7 +11,7 @@ namespace StockPro.Analytics.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/reports")]
-[Authorize(Roles = "MANAGER,ADMIN")]
+[Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
 public class ReportController : ControllerBase
 {
     private readonly IReportService _reportService;
@@ -212,7 +212,7 @@ public class ReportController : ControllerBase
     /// Restricted to ADMIN only (background job runs this automatically daily).
     /// </summary>
     [HttpPost("snapshot")]
-    [Authorize(Roles = "ADMIN")]
+    [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
     public async Task<IActionResult> TakeSnapshot([FromQuery] DateOnly? date)
     {
         try

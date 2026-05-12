@@ -122,7 +122,10 @@ import { Product } from '../../../products/models/product.model';
                   <td style="padding: 16px 24px; font-family: 'Courier New', monospace; font-size: 12px; color: var(--color-muted);">{{ po.orderDate | date:'yyyy.MM.dd' }}</td>
                   <td style="padding: 16px 24px; font-family: 'Courier New', monospace; font-size: 12px; color: var(--color-muted);">{{ po.expectedDate ? (po.expectedDate | date:'yyyy.MM.dd') : '—' }}</td>
                   <td style="padding: 16px 24px; text-align: right; font-weight: 700; color: #fff;">{{ po.totalAmount | number:'1.2-2' }}</td>
-                  <td style="padding: 16px 24px; text-align: center; color: var(--color-muted);">{{ po.lineItems.length }}</td>
+                  <td style="padding: 16px 24px; text-align: center; color: var(--color-muted);">
+                    <div style="color: #fff; font-weight: 600;">{{ po.lineItems.length }}</div>
+                    <div style="font-size: 10px; opacity: 0.7;">{{ getTotalUnits(po) }} units</div>
+                  </td>
                   <td style="padding: 16px 24px;">
                     <div style="display: flex; gap: 6px;">
                       <button (click)="viewDetail(po.poId)" class="btn btn-ghost" style="padding: 4px 14px; font-size: 10px;">VIEW</button>
@@ -168,8 +171,8 @@ export class POListComponent implements OnInit {
     { label: 'Cancelled', value: 'CANCELLED' }
   ];
 
-  get canCreate(): boolean { return ['ADMIN', 'INVENTORY MANAGER'].includes(this.authService.userRole); }
-  get canApprove(): boolean { return ['ADMIN', 'INVENTORY MANAGER'].includes(this.authService.userRole); }
+  get canCreate(): boolean { return ['ADMIN', 'INVENTORY MANAGER', 'MANAGER'].includes(this.authService.userRole); }
+  get canApprove(): boolean { return ['ADMIN', 'INVENTORY MANAGER', 'MANAGER'].includes(this.authService.userRole); }
   get items(): FormArray { return this.poForm.get('items') as FormArray; }
 
   constructor(
@@ -252,5 +255,9 @@ export class POListComponent implements OnInit {
       RECEIVED: 'status-received', CANCELLED: 'status-cancelled'
     };
     return map[status] || 'status-draft';
+  }
+
+  getTotalUnits(po: PurchaseOrder): number {
+    return po.lineItems.reduce((acc, item) => acc + item.quantity, 0);
   }
 }

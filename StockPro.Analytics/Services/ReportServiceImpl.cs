@@ -49,7 +49,7 @@ public class ReportServiceImpl : IReportService
         try
         {
             var http = CreateSystemHttpClient();
-            var stockUrl = _config["ServiceUrls:WarehouseStock"];
+            var stockUrl = _config["ServiceUrls:StockMovement"];
             var productUrl = _config["ServiceUrls:ProductItem"];
 
             // Fetch all stock levels and products in parallel
@@ -154,7 +154,7 @@ public class ReportServiceImpl : IReportService
     private async Task<InventoryValueResult> GetLiveInventoryValueAsync()
     {
         var http = CreateSystemHttpClient();
-        var stockUrl = _config["ServiceUrls:WarehouseStock"];
+        var stockUrl = _config["ServiceUrls:StockMovement"];
         var productUrl = _config["ServiceUrls:ProductItem"];
 
         var stockTask = http.GetStringAsync($"{stockUrl}/api/stock");
@@ -209,7 +209,7 @@ public class ReportServiceImpl : IReportService
     private async Task<List<WarehouseValueResult>> GetLiveStockValueByWarehouseAsync()
     {
         var http = CreateSystemHttpClient();
-        var stockUrl = _config["ServiceUrls:WarehouseStock"];
+        var stockUrl = _config["ServiceUrls:StockMovement"];
         var productUrl = _config["ServiceUrls:ProductItem"];
 
         var stockJson = await http.GetStringAsync($"{stockUrl}/api/stock");
@@ -263,13 +263,13 @@ public class ReportServiceImpl : IReportService
         var movementUrl = _config["ServiceUrls:StockMovement"];
 
         var movementsJson = await http.GetStringAsync(
-            $"{movementUrl}/api/movements?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}");
+            $"{movementUrl}/api/movement/history?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}");
         var movements = JsonSerializer.Deserialize<List<MovementDto>>(movementsJson, _json) ?? new();
 
         // COGS = sum of (quantity × unitCost) for all STOCK_OUT movements in the period
         var cogs = movements
             .Where(m => m.MovementType == "STOCK_OUT")
-            .Sum(m => m.Quantity * m.UnitCost);
+            .Sum(m => Math.Abs(m.Quantity) * (m.UnitCost ?? 0));
 
         // Average Inventory Value from snapshots
         var snapshotStart = await _db.Snapshots
@@ -304,7 +304,7 @@ public class ReportServiceImpl : IReportService
         var productUrl = _config["ServiceUrls:ProductItem"];
 
         var movementsJson = await http.GetStringAsync(
-            $"{movementUrl}/api/movements?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}");
+            $"{movementUrl}/api/movement/history?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}");
         var productJson = await http.GetStringAsync($"{productUrl}/api/products");
 
         var movements = JsonSerializer.Deserialize<List<MovementDto>>(movementsJson, _json) ?? new();
@@ -344,10 +344,10 @@ public class ReportServiceImpl : IReportService
         var http = CreateSystemHttpClient();
         var movementUrl = _config["ServiceUrls:StockMovement"];
         var productUrl = _config["ServiceUrls:ProductItem"];
-        var stockUrl = _config["ServiceUrls:WarehouseStock"];
+        var stockUrl = _config["ServiceUrls:StockMovement"];
 
         var movementsJson = await http.GetStringAsync(
-            $"{movementUrl}/api/movements?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}");
+            $"{movementUrl}/api/movement/history?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}");
         var productJson = await http.GetStringAsync($"{productUrl}/api/products");
         var stockJson = await http.GetStringAsync($"{stockUrl}/api/stock");
 
@@ -397,9 +397,9 @@ public class ReportServiceImpl : IReportService
         var http = CreateSystemHttpClient();
         var movementUrl = _config["ServiceUrls:StockMovement"];
         var productUrl = _config["ServiceUrls:ProductItem"];
-        var stockUrl = _config["ServiceUrls:WarehouseStock"];
+        var stockUrl = _config["ServiceUrls:StockMovement"];
 
-        var movementsJson = await http.GetStringAsync($"{movementUrl}/api/movements");
+        var movementsJson = await http.GetStringAsync($"{movementUrl}/api/movement/history");
         var productJson = await http.GetStringAsync($"{productUrl}/api/products");
         var stockJson = await http.GetStringAsync($"{stockUrl}/api/stock");
 
@@ -499,7 +499,7 @@ public class ReportServiceImpl : IReportService
     public async Task<List<LowStockItem>> GetLowStockReportAsync()
     {
         var http = CreateSystemHttpClient();
-        var stockUrl = _config["ServiceUrls:WarehouseStock"];
+        var stockUrl = _config["ServiceUrls:StockMovement"];
         var productUrl = _config["ServiceUrls:ProductItem"];
 
         var stockJson = await http.GetStringAsync($"{stockUrl}/api/stock");
@@ -543,7 +543,7 @@ public class ReportServiceImpl : IReportService
         var movementUrl = _config["ServiceUrls:StockMovement"];
 
         var movementsJson = await http.GetStringAsync(
-            $"{movementUrl}/api/movements?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}");
+            $"{movementUrl}/api/movement/history?startDate={startDate:yyyy-MM-dd}&endDate={endDate:yyyy-MM-dd}");
         var movements = JsonSerializer.Deserialize<List<MovementDto>>(movementsJson, _json) ?? new();
 
         return new MovementSummaryResult

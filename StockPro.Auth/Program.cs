@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using StockPro.Auth.Data;
 using StockPro.Auth.Models;
 using StockPro.Auth.Services;
+using StockPro.Auth.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,25 +39,27 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+    .AddJwtBearer(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ClockSkew = TimeSpan.Zero
-    };
-});
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ClockSkew = TimeSpan.Zero,
+            RoleClaimType = System.Security.Claims.ClaimTypes.Role
+        };
+    });
 
 builder.Services.AddAuthorization();
 
 // ─── Services ────────────────────────────────────────────────────────
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAdminService, AdminServiceImpl>();
 
 // ─── CORS ────────────────────────────────────────────────────────────
 builder.Services.AddCors(options =>
@@ -125,15 +128,43 @@ using (var scope = app.Services.CreateScope())
     var db = services.GetRequiredService<AuthDbContext>();
     db.Database.Migrate();
 
-    // Seeding Roles and Admin User
+    // ── Role Migration & Seeding ─────────────────────────────────────
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-    string[] roles = { "ADMIN", "INVENTORY MANAGER", "STAFF" };
-    foreach (var role in roles)
+    string[] targetRoles = { "ADMIN", "INVENTORY MANAGER", "STAFF" };
+    foreach (var role in targetRoles)
     {
         if (!await roleManager.RoleExistsAsync(role))
             await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+    // Migration Logic: Move users from legacy roles to new standard roles
+    var allUsers = await userManager.Users.ToListAsync();
+    foreach (var user in allUsers)
+    {
+        var currentRoles = await userManager.GetRolesAsync(user);
+        
+        // 1. MANAGER -> INVENTORY MANAGER
+        if (currentRoles.Contains("MANAGER") && !currentRoles.Contains("INVENTORY MANAGER"))
+        {
+            await userManager.AddToRoleAsync(user, "INVENTORY MANAGER");
+            await userManager.RemoveFromRoleAsync(user, "MANAGER");
+        }
+
+        // 2. WAREHOUSE STAFF -> STAFF
+        if (currentRoles.Contains("WAREHOUSE STAFF") && !currentRoles.Contains("STAFF"))
+        {
+            await userManager.AddToRoleAsync(user, "STAFF");
+            await userManager.RemoveFromRoleAsync(user, "WAREHOUSE STAFF");
+        }
+
+        // 3. OFFICER -> STAFF (Default fallback)
+        if (currentRoles.Contains("OFFICER") && !currentRoles.Contains("STAFF"))
+        {
+            await userManager.AddToRoleAsync(user, "STAFF");
+            await userManager.RemoveFromRoleAsync(user, "OFFICER");
+        }
     }
 
     var adminEmail = "admin@stockpro.com";

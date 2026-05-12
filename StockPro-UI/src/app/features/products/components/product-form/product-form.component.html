@@ -14,8 +14,9 @@
 
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="ledger-spec-form">
       
-      <div class="form-alert error" *ngIf="errorMessage">
-        <i class="fas fa-circle-exclamation"></i> {{ errorMessage }}
+      <div class="form-alert error" *ngIf="errorMessage || (productForm.touched && productForm.errors?.['pricingError'])">
+        <i class="fas fa-circle-exclamation"></i> 
+        {{ errorMessage || 'Financial Integrity Error: Market price cannot be lower than cost basis.' }}
       </div>
 
       <div class="spec-grid">
@@ -72,7 +73,8 @@
               </div>
               <div class="field-wrap">
                 <label class="spec-label">Market Selling Price ($)*</label>
-                <input type="number" class="spec-input highlight" formControlName="sellingPrice">
+                <input type="number" class="spec-input highlight" formControlName="sellingPrice" [class.input-invalid]="productForm.errors?.['pricingError']">
+                <span class="v-error" *ngIf="productForm.errors?.['pricingError']">Requirement: Recovery of cost basis</span>
               </div>
             </div>
 

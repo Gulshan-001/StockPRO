@@ -15,7 +15,7 @@ namespace StockPro.StockMovement.Services
         Task<MovementResponseDto> StockOutAsync(StockOutRequestDto request, Guid performedBy);
         Task<MovementResponseDto> TransferAsync(StockTransferRequestDto request, Guid performedBy);
         Task<MovementResponseDto> AdjustmentAsync(StockAdjustmentRequestDto request, Guid performedBy);
-        Task<IEnumerable<MovementResponseDto>> GetHistoryAsync(Guid? productId, Guid? warehouseId, string type);
+        Task<IEnumerable<MovementResponseDto>> GetHistoryAsync(Guid? productId, Guid? warehouseId, string type, DateTime? startDate = null, DateTime? endDate = null);
     }
 
     public class MovementServiceImpl : IMovementService
@@ -127,6 +127,7 @@ namespace StockPro.StockMovement.Services
                     WarehouseId = request.SourceWarehouseId,
                     MovementType = "TRANSFER_OUT",
                     Quantity = -request.Quantity,
+                    ReferenceType = "TRANSFER",
                     PerformedBy = performedBy,
                     Notes = $"Transfer to {request.TargetWarehouseId}. " + request.Notes,
                     BalanceAfter = sourceStock.Quantity
@@ -143,18 +144,28 @@ namespace StockPro.StockMovement.Services
                     WarehouseId = request.TargetWarehouseId,
                     MovementType = "TRANSFER_IN",
                     Quantity = request.Quantity,
+                    ReferenceType = "TRANSFER",
                     PerformedBy = performedBy,
                     Notes = $"Transfer from {request.SourceWarehouseId}. " + request.Notes,
                     BalanceAfter = targetStock.Quantity
                 };
 
-                _context.StockMovements.AddRange(outMovement, inMovement);
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
+                _context.StockMovements.Add(outMovement);
+                _context.StockMovements.Add(inMovement);
+                
+                try 
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException dbEx)
+                {
+                    throw new Exception($"Database Update Error: {dbEx.InnerException?.Message ?? dbEx.Message}");
+                }
 
+                await transaction.CommitAsync();
                 return MapToDto(outMovement);
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 throw;
@@ -179,6 +190,7 @@ namespace StockPro.StockMovement.Services
                     WarehouseId = request.WarehouseId,
                     MovementType = "ADJUSTMENT",
                     Quantity = request.Quantity,
+                    ReferenceType = "ADJUSTMENT",
                     PerformedBy = performedBy,
                     Notes = request.Notes,
                     BalanceAfter = stock.Quantity
@@ -197,13 +209,24 @@ namespace StockPro.StockMovement.Services
             }
         }
 
-        public async Task<IEnumerable<MovementResponseDto>> GetHistoryAsync(Guid? productId, Guid? warehouseId, string type)
+        public async Task<IEnumerable<MovementResponseDto>> GetHistoryAsync(Guid? productId, Guid? warehouseId, string type, DateTime? startDate = null, DateTime? endDate = null)
         {
             var query = _context.StockMovements.AsQueryable();
 
             if (productId.HasValue) query = query.Where(m => m.ProductId == productId.Value);
             if (warehouseId.HasValue) query = query.Where(m => m.WarehouseId == warehouseId.Value);
             if (!string.IsNullOrEmpty(type)) query = query.Where(m => m.MovementType == type);
+            
+            if (startDate.HasValue)
+            {
+                var startUtc = DateTime.SpecifyKind(startDate.Value, DateTimeKind.Utc);
+                query = query.Where(m => m.MovementDate >= startUtc);
+            }
+            if (endDate.HasValue)
+            {
+                var endUtc = DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc);
+                query = query.Where(m => m.MovementDate <= endUtc);
+            }
 
             var list = await query.OrderByDescending(m => m.MovementDate).ToListAsync();
             return list.Select(MapToDto);

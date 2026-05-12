@@ -29,7 +29,7 @@ import { Product } from '../../../products/models/product.model';
               <h1 class="title" style="font-family: 'Outfit', sans-serif; font-size: 52px; letter-spacing: -0.04em; margin-bottom: 5px;">Movement Ledger</h1>
               <p class="subtitle" style="max-width: 700px; margin-bottom: 0; font-size: 15px; opacity: 0.7;">Verified cryptographic records of all inventory mutations across the network.</p>
             </div>
-            <button class="btn btn-primary" routerLink="/movements/new" style="white-space: nowrap; padding: 12px 28px;">
+            <button class="btn btn-primary" (click)="goNewTransaction()" style="white-space: nowrap; padding: 12px 28px;">
               + NEW TRANSACTION
             </button>
           </div>
@@ -133,6 +133,10 @@ export class MovementHistoryComponent implements OnInit {
 
   goDashboard(): void {
     this.router.navigate(['/dashboard']);
+  }
+
+  goNewTransaction(): void {
+    this.router.navigate(['/movements/new']);
   }
 
   loadHistory(): void {

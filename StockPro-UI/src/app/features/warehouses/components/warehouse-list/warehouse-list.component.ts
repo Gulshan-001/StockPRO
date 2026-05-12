@@ -232,7 +232,7 @@ export class WarehouseListComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
-    this.isAdmin = this.authService.userRole.toUpperCase() === 'ADMIN';
+    this.isAdmin = ['ADMIN', 'INVENTORY MANAGER', 'MANAGER'].includes(this.authService.userRole.toUpperCase());
   }
 
   ngOnInit(): void { 

@@ -30,7 +30,7 @@ export class ProductDetailComponent implements OnInit {
     private authService: AuthService
   ) {
     const role = this.authService.userRole.toUpperCase();
-    this.canManage = role === 'INVENTORY MANAGER' || role === 'ADMIN';
+    this.canManage = role === 'INVENTORY MANAGER' || role === 'ADMIN' || role === 'MANAGER';
   }
 
   ngOnInit(): void {

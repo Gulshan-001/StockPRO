@@ -50,7 +50,7 @@ namespace StockPro.ProductItem.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "INVENTORY MANAGER,ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> Create([FromBody] ProductCreateDto dto)
         {
             try
@@ -65,7 +65,7 @@ namespace StockPro.ProductItem.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "INVENTORY MANAGER,ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> Update(Guid id, [FromBody] ProductUpdateDto dto)
         {
             try
@@ -81,7 +81,7 @@ namespace StockPro.ProductItem.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "INVENTORY MANAGER,ADMIN")]
+        [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _productService.DeleteProductAsync(id);
