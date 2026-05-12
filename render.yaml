@@ -137,9 +137,9 @@ services:
           property: connectionString
 
   # ─── Frontend (Angular) ────────────────────────────────────────────────────
-  - type: static_site
+  - type: web
     name: stockpro-ui
-    env: node
+    env: static
     plan: free
     buildCommand: "cd StockPro-UI && npm install && npm run build"
     staticPublishPath: "StockPro-UI/dist/stock-pro-ui/browser"
