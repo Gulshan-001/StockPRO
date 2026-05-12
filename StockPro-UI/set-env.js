@@ -15,16 +15,8 @@ const vars = [
 ];
 
 vars.forEach(v => {
-  let value = (process.env[v] || 'http://localhost:5000').trim();
-  
-  // If it's a domain without a protocol, always force https://
-  if (!value.startsWith('http')) {
-    value = `https://${value}`;
-  }
-  
-  // Ensure no trailing slashes
-  value = value.replace(/\/$/, '');
-  
+  const value = (process.env[v] || 'http://localhost:5000').trim();
+  console.log(`Injecting ${v}: ${value}`);
   envContent = envContent.replace(`\${${v}}`, value);
 });
 

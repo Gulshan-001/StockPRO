@@ -143,37 +143,16 @@ services:
     staticPublishPath: "StockPro-UI/dist/stock-pro-ui/browser"
     envVars:
       - key: AUTH_API_URL
-        fromService:
-          type: web
-          name: stockpro-auth
-          property: host
+        value: "https://stockpro-auth.onrender.com"
       - key: PRODUCT_API_URL
-        fromService:
-          type: web
-          name: stockpro-product
-          property: host
+        value: "https://stockpro-product.onrender.com"
       - key: WAREHOUSE_API_URL
-        fromService:
-          type: web
-          name: stockpro-warehouse
-          property: host
+        value: "https://stockpro-warehouse.onrender.com"
       - key: MOVEMENT_API_URL
-        fromService:
-          type: web
-          name: stockpro-movement
-          property: host
+        value: "https://stockpro-movement.onrender.com"
       - key: PURCHASE_API_URL
-        fromService:
-          type: web
-          name: stockpro-purchase
-          property: host
+        value: "https://stockpro-purchase.onrender.com"
       - key: ALERT_API_URL
-        fromService:
-          type: web
-          name: stockpro-alert
-          property: host
+        value: "https://stockpro-alert.onrender.com"
       - key: ANALYTICS_API_URL
-        fromService:
-          type: web
-          name: stockpro-analytics
-          property: host
+        value: "https://stockpro-analytics.onrender.com"
