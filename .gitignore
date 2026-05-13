@@ -1,0 +1,36 @@
+# .NET Core
+**/bin/
+**/obj/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+
+# Visual Studio Code
+.vscode/
+.history/
+*.code-workspace
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+.npm/
+*.log
+
+# Environment Files
+.env
+.env.local
+*.Docker.json
+
+# StockPro Specific
+case_study_text.txt
+extract_pdf.py
+postgres_data/

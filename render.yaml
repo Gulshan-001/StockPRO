@@ -1,0 +1,158 @@
+databases:
+  - name: stockpro-db
+    databaseName: stockpro
+    plan: free
+
+services:
+  # ─── Auth Service ──────────────────────────────────────────────────────────
+  - type: web
+    name: stockpro-auth
+    env: docker
+    dockerContext: ./StockPro.Auth
+    dockerfilePath: StockPro.Auth/Dockerfile
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stockpro-db
+          property: url
+
+  # ─── Product Item Service ──────────────────────────────────────────────────
+  - type: web
+    name: stockpro-product
+    env: docker
+    dockerContext: ./StockPro.ProductItem
+    dockerfilePath: StockPro.ProductItem/Dockerfile
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stockpro-db
+          property: url
+
+  # ─── Warehouse Stock Service ───────────────────────────────────────────────
+  - type: web
+    name: stockpro-warehouse
+    env: docker
+    dockerContext: ./StockPro.WarehouseStock
+    dockerfilePath: StockPro.WarehouseStock/Dockerfile
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stockpro-db
+          property: url
+
+  # ─── Stock Movement Service ───────────────────────────────────────────────
+  - type: web
+    name: stockpro-movement
+    env: docker
+    dockerContext: ./StockPro.StockMovement
+    dockerfilePath: StockPro.StockMovement/Dockerfile
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stockpro-db
+          property: url
+
+  # ─── Purchase Service ──────────────────────────────────────────────────────
+  - type: web
+    name: stockpro-purchase
+    env: docker
+    dockerContext: ./StockPro.Purchase
+    dockerfilePath: StockPro.Purchase/Dockerfile
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:5000
+      - key: MovementServiceUrl
+        value: http://stockpro-movement:5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stockpro-db
+          property: url
+
+  # ─── Alert Service ──────────────────────────────────────────────────────────
+  - type: web
+    name: stockpro-alert
+    env: docker
+    dockerContext: ./StockPro.Alert
+    dockerfilePath: StockPro.Alert/Dockerfile
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:5000
+      - key: ServiceUrls__StockMovement
+        value: http://stockpro-movement:5000
+      - key: ServiceUrls__ProductItem
+        value: http://stockpro-product:5000
+      - key: ServiceUrls__Purchase
+        value: http://stockpro-purchase:5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stockpro-db
+          property: url
+
+  # ─── Analytics Service ──────────────────────────────────────────────────────
+  - type: web
+    name: stockpro-analytics
+    env: docker
+    dockerContext: ./StockPro.Analytics
+    dockerfilePath: StockPro.Analytics/Dockerfile
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:5000
+      - key: WarehouseServiceUrl
+        value: http://stockpro-warehouse:5000
+      - key: MovementServiceUrl
+        value: http://stockpro-movement:5000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: stockpro-db
+          property: url
+
+  # ─── Frontend (Angular) ────────────────────────────────────────────────────
+  - type: web
+    name: stockpro-ui
+    env: static
+    buildCommand: "cd StockPro-UI && npm install && npm run build"
+    staticPublishPath: "StockPro-UI/dist/stock-pro-ui/browser"
+    envVars:
+      - key: AUTH_API_URL
+        value: "https://stockpro-auth.onrender.com"
+      - key: PRODUCT_API_URL
+        value: "https://stockpro-product.onrender.com"
+      - key: WAREHOUSE_API_URL
+        value: "https://stockpro-warehouse.onrender.com"
+      - key: MOVEMENT_API_URL
+        value: "https://stockpro-movement.onrender.com"
+      - key: PURCHASE_API_URL
+        value: "https://stockpro-purchase.onrender.com"
+      - key: ALERT_API_URL
+        value: "https://stockpro-alert.onrender.com"
+      - key: ANALYTICS_API_URL
+        value: "https://stockpro-analytics.onrender.com"

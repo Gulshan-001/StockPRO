@@ -1,0 +1,138 @@
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: stockpro-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: stockpro_default
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - stockpro-network
+    restart: always
+
+  auth:
+    build:
+      context: ./StockPro.Auth
+    container_name: stockpro-auth
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
+  product-item:
+    build:
+      context: ./StockPro.ProductItem
+    container_name: stockpro-product
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5001
+    ports:
+      - "5001:5001"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
+  warehouse-stock:
+    build:
+      context: ./StockPro.WarehouseStock
+    container_name: stockpro-warehouse
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5002
+    ports:
+      - "5002:5002"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
+  stock-movement:
+    build:
+      context: ./StockPro.StockMovement
+    container_name: stockpro-movement
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5003
+    ports:
+      - "5013:5003"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
+  purchase:
+    build:
+      context: ./StockPro.Purchase
+    container_name: stockpro-purchase
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5004
+    ports:
+      - "5004:5004"
+    depends_on:
+      - postgres
+      - stock-movement
+    networks:
+      - stockpro-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: stockpro-admin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@stockpro.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+    restart: always
+
+  alert:
+    build:
+      context: ./StockPro.Alert
+    container_name: stockpro-alert
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5005
+    ports:
+      - "5005:5005"
+    depends_on:
+      - postgres
+    networks:
+      - stockpro-network
+
+  analytics:
+    build:
+      context: ./StockPro.Analytics
+    container_name: stockpro-analytics
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5006
+    ports:
+      - "5006:5006"
+    depends_on:
+      - postgres
+      - warehouse-stock
+      - stock-movement
+    networks:
+      - stockpro-network
+
+networks:
+  stockpro-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

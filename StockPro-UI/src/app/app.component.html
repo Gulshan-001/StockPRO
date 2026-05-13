@@ -1,0 +1,21 @@
+<div class="header-shroud"></div>
+<div class="global-logo">STOCKPRO</div>
+
+<!-- App Navigation (Global) -->
+<nav class="app-nav" *ngIf="isLoggedIn && showNav">
+  <div class="nav-links">
+    <a routerLink="/dashboard" routerLinkActive="active">DASHBOARD</a>
+    <a routerLink="/products" routerLinkActive="active">PRODUCTS</a>
+    <a routerLink="/warehouses" routerLinkActive="active">WAREHOUSES</a>
+    <a routerLink="/movements" routerLinkActive="active">MOVEMENTS</a>
+    <a routerLink="/purchases" routerLinkActive="active">PURCHASES</a>
+    <a routerLink="/reports" routerLinkActive="active">ANALYTICS</a>
+  </div>
+  <div style="display: flex; align-items: center; gap: 20px;">
+    <app-notification-bell></app-notification-bell>
+    <button class="btn-logout" (click)="logout()">SIGN OUT</button>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>
+
