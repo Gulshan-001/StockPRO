@@ -1,10 +1,10 @@
 # StockPRO - Industrial Inventory Ecosystem & Distributed Ledger
 
-![StockPRO Banner](https://img.shields.io/badge/StockPRO-Operational%20Zen-0A0A0A?style=for-the-badge&logoScale=1.2)
 ![Angular](https://img.shields.io/badge/Angular%2017-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![.NET 8](https://img.shields.io/badge/.NET%208-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![StockPRO Banner](https://img.shields.io/badge/StockPRO-Minimal%20Aesthetics-0A0A0A?style=for-the-badge&logoScale=1.2)
 
 StockPRO is a mission-critical, distributed inventory management platform engineered for high-concurrency industrial environments. Built on a **Microservices Mesh Architecture**, it ensures absolute data integrity through an immutable movement ledger, atomic stock orchestration, and a forensic-grade audit system.
 
