@@ -52,7 +52,7 @@
                   <img [src]="product.imageUrl" (error)="product.imageUrl = ''">
                 </ng-container>
                 <ng-template #letterFallback>
-                  <span>{{ (product.name?.trim()?.charAt(0) || '?') | uppercase }}</span>
+                  <span>{{ (product.name.trim().charAt(0) || '?') | uppercase }}</span>
                 </ng-template>
               </div>
               <div class="p-info">
