@@ -48,8 +48,12 @@
           <div class="col-main">
             <div class="identity-lockup">
               <div class="p-avatar" [class.no-img]="!product.imageUrl">
-                <span *ngIf="!product.imageUrl">{{ product.name.charAt(0) }}</span>
-                <img *ngIf="product.imageUrl" [src]="product.imageUrl">
+                <ng-container *ngIf="product.imageUrl; else letterFallback">
+                  <img [src]="product.imageUrl" (error)="product.imageUrl = ''">
+                </ng-container>
+                <ng-template #letterFallback>
+                  <span>{{ (product.name?.trim()?.charAt(0) || '?') | uppercase }}</span>
+                </ng-template>
               </div>
               <div class="p-info">
                 <h3 class="p-name">{{ product.name }}</h3>
