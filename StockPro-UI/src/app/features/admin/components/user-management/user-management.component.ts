@@ -319,7 +319,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 export class UserManagementComponent implements OnInit {
   users: AdminUser[] = [];
   filteredUsers: AdminUser[] = [];
-  availableRoles: string[] = ['ADMIN', 'INVENTORY MANAGER', 'MANAGER', 'STAFF', 'WAREHOUSE STAFF', 'OFFICER'];
+  availableRoles: string[] = ['ADMIN', 'MANAGER', 'STAFF'];
 
   searchQuery = '';
   roleFilter = '';
@@ -470,8 +470,7 @@ export class UserManagementComponent implements OnInit {
   getRoleBadge(role: string): string {
     const map: Record<string, string> = {
       ADMIN: 'role-admin',
-      'INVENTORY MANAGER': 'role-manager',
-      MANAGER: 'role-manager', // Fallback for legacy
+      MANAGER: 'role-manager',
       STAFF: 'role-staff'
     };
     return map[role] || 'role-staff';
