@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -31,43 +31,13 @@ namespace StockPro.WarehouseStock.Migrations
                     table.PrimaryKey("PK_Warehouses", x => x.WarehouseId);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "StockLevels",
-                columns: table => new
-                {
-                    StockId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WarehouseId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Quantity = table.Column<int>(type: "integer", nullable: false),
-                    ReservedQuantity = table.Column<int>(type: "integer", nullable: false),
-                    Location = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    LastUpdated = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StockLevels", x => x.StockId);
-                    table.ForeignKey(
-                        name: "FK_StockLevels_Warehouses_WarehouseId",
-                        column: x => x.WarehouseId,
-                        principalTable: "Warehouses",
-                        principalColumn: "WarehouseId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StockLevels_WarehouseId",
-                table: "StockLevels",
-                column: "WarehouseId");
         }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "StockLevels");
-
-            migrationBuilder.DropTable(
-                name: "Warehouses");
-        }
-    }
-}
+ 
+         /// <inheritdoc />
+         protected override void Down(MigrationBuilder migrationBuilder)
+         {
+             migrationBuilder.DropTable(
+                 name: "Warehouses");
+         }
+     }
+ }
