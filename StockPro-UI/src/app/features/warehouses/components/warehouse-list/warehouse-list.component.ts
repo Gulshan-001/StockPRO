@@ -5,7 +5,6 @@ import { WarehouseService } from '../../services/warehouse.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { Warehouse } from '../../models/warehouse.model';
-import { Observable, forkJoin } from 'rxjs';
 import { StockLevel } from '../../models/warehouse.model';
 
 @Component({
@@ -240,13 +239,18 @@ export class WarehouseListComponent implements OnInit {
   }
 
   loadData(): void {
-    forkJoin({
-      warehouses: this.warehouseService.getAllWarehouses(),
-      stock: this.warehouseService.getStockLevels()
-    }).subscribe({
-      next: (res) => {
-        this.warehouses = res.warehouses;
-        this.stockLevels = res.stock;
+    this.warehouseService.getAllWarehouses().subscribe({
+      next: (warehouses) => {
+        this.warehouses = warehouses;
+        // Load stock levels separately — if it fails, we still show warehouses
+        this.warehouseService.getStockLevels().subscribe({
+          next: (stock) => this.stockLevels = stock,
+          error: () => this.stockLevels = []
+        });
+      },
+      error: () => {
+        this.warehouses = [];
+        this.stockLevels = [];
       }
     });
   }
