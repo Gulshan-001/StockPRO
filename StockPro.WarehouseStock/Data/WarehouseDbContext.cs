@@ -15,7 +15,6 @@ namespace StockPro.WarehouseStock.Data
             
             // PostgreSQL compatibility: force lowercase table names
             modelBuilder.Entity<Warehouse>().ToTable("warehouses");
-            modelBuilder.Entity<StockLevel>().ToTable("stocklevels");
 
             // Product check is removed here because Product is in another database.
             // Referential integrity for ProductId is now logical, not physical.
