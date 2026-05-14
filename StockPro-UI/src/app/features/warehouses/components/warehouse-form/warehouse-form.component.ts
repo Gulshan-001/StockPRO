@@ -159,7 +159,10 @@ export class WarehouseFormComponent implements OnInit {
       next: () => this.router.navigate(['/warehouses']),
       error: (err) => {
         this.submitting = false;
-        this.errorMessage = err.error?.message || 'Failed to save warehouse.';
+        const msg = err.error?.message || 'Failed to save warehouse.';
+        const details = err.error?.details ? ` (${err.error.details})` : '';
+        const inner = err.error?.inner && err.error.inner !== 'No inner exception' ? ` [Inner: ${err.error.inner}]` : '';
+        this.errorMessage = msg + details + inner;
       }
     });
   }

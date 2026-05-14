@@ -47,7 +47,12 @@ namespace StockPro.WarehouseStock.Controllers
             {
                 // Log the error (in a real app, use ILogger)
                 Console.WriteLine($"Error creating warehouse: {ex.Message}");
-                return StatusCode(500, new { message = "An internal error occurred while creating the warehouse.", details = ex.Message });
+                var innerMsg = ex.InnerException != null ? ex.InnerException.Message : "No inner exception";
+                return StatusCode(500, new { 
+                    message = "An internal error occurred while creating the warehouse.", 
+                    details = ex.Message,
+                    inner = innerMsg
+                });
             }
         }
 
