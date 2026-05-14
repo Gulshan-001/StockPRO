@@ -9,7 +9,7 @@ services:
     name: stockpro-auth
     env: docker
     dockerContext: ./StockPro.Auth
-    dockerfilePath: StockPro.Auth/Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -26,7 +26,7 @@ services:
     name: stockpro-product
     env: docker
     dockerContext: ./StockPro.ProductItem
-    dockerfilePath: StockPro.ProductItem/Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -43,7 +43,7 @@ services:
     name: stockpro-warehouse
     env: docker
     dockerContext: ./StockPro.WarehouseStock
-    dockerfilePath: StockPro.WarehouseStock/Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -60,7 +60,7 @@ services:
     name: stockpro-movement
     env: docker
     dockerContext: ./StockPro.StockMovement
-    dockerfilePath: StockPro.StockMovement/Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -77,7 +77,7 @@ services:
     name: stockpro-purchase
     env: docker
     dockerContext: ./StockPro.Purchase
-    dockerfilePath: StockPro.Purchase/Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -96,7 +96,7 @@ services:
     name: stockpro-alert
     env: docker
     dockerContext: ./StockPro.Alert
-    dockerfilePath: StockPro.Alert/Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
@@ -119,7 +119,7 @@ services:
     name: stockpro-analytics
     env: docker
     dockerContext: ./StockPro.Analytics
-    dockerfilePath: StockPro.Analytics/Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
