@@ -129,9 +129,18 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<WarehouseDbContext>();
     try {
+        var host = connectionString?.Split(';').FirstOrDefault(x => x.Trim().StartsWith("Host="))?.Split('=')[1] ?? "unknown";
+        Console.WriteLine($"Starting database migration on host: {host}...");
         db.Database.Migrate();
+        Console.WriteLine("Database migration completed successfully.");
     } catch (Exception ex) {
-        Console.WriteLine($"Migration failed: {ex.Message}");
+        Console.WriteLine($"FATAL: Database migration failed: {ex.Message}");
+        if (ex.InnerException != null) 
+            Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+        
+        // In production, we want the app to crash if migrations fail 
+        // so Render knows the deployment failed.
+        if (app.Environment.IsProduction()) throw; 
     }
 }
 
