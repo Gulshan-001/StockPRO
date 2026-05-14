@@ -38,8 +38,17 @@ namespace StockPro.WarehouseStock.Controllers
         [Authorize(Roles = "ADMIN,INVENTORY MANAGER,MANAGER,STAFF,WAREHOUSE STAFF,OFFICER")]
         public async Task<IActionResult> Create([FromBody] WarehouseCreateDto dto)
         {
-            var warehouse = await _warehouseService.CreateWarehouseAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = warehouse.WarehouseId }, warehouse);
+            try
+            {
+                var warehouse = await _warehouseService.CreateWarehouseAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = warehouse.WarehouseId }, warehouse);
+            }
+            catch (Exception ex)
+            {
+                // Log the error (in a real app, use ILogger)
+                Console.WriteLine($"Error creating warehouse: {ex.Message}");
+                return StatusCode(500, new { message = "An internal error occurred while creating the warehouse.", details = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]

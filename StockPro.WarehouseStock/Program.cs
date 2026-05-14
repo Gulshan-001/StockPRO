@@ -75,6 +75,7 @@ builder.Services.AddCors(options =>
 });
 
 // ─── Controllers + Swagger ──────────────────────────────────────────
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -110,13 +111,14 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // ─── Middleware Pipeline ─────────────────────────────────────────────
+app.UseCors("AngularFrontend");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseCors("AngularFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
