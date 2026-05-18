@@ -111,14 +111,10 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 // ─── Middleware Pipeline ─────────────────────────────────────────────
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseCors("AngularFrontend");
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
